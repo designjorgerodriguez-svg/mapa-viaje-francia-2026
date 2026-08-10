@@ -6,3 +6,11 @@ window.BEACHES = [
 {id:105,name:'Plage du Vivier · Biscarrosse',category:'Playa con perro',lat:44.4583359,lng:-1.2543617,desc:'La playa más al norte de Biscarrosse-Plage, con bosque y dunas detrás del arenal.',highlights:'Playa extensa · bosque · dunas · zona canina al norte',time:'1–3 h',access:'Gratis.',dogs:'Sí con condiciones. Del 1 junio al 30 septiembre, entre 10:00 y 20:00 solo fuera de las zonas reglamentadas; en Le Vivier se indica zona apta unos 500 m al norte del sector vigilado. Antes de 10:00 y después de 20:00 se toleran también en otras zonas, con correa y según normativa aplicable bozal.',tip:'Seguid la playa hacia el norte desde el acceso principal hasta salir claramente de la zona vigilada.',source:'https://www.tourismelandes.com/decouvrir-la-destination/atmospheres-landaises/partir-en-vacances-avec-son-chien-dans-les-landes/les-chiens-autorises-sur-les-plages-landaises/les-plages-qui-tolerent-les-chiens/'},
 {id:106,name:'Plage Sud · Biscarrosse',category:'Playa con perro',lat:44.4425923,lng:-1.256915,desc:'Playa del extremo sur de Biscarrosse-Plage, junto a dunas y con un sector amplio fuera de la zona vigilada.',highlights:'Playa amplia · surf · dunas · sector canino al sur',time:'1–3 h',access:'Gratis.',dogs:'Sí con condiciones. En verano se admiten fuera de la zona reglamentada; la información turística 2026 sitúa el sector apto aproximadamente 300 m al sur de la zona vigilada.',tip:'Es probablemente la opción más práctica de Biscarrosse si vais con perro: caminar hacia el sur desde el puesto de vigilancia.',source:'https://www.cirkwi.com/es/point-interet/1630580-plage-sud'}
 ];
+
+window.addEventListener('load',()=>{
+  if(document.querySelector('script[data-travel-ui-v4]')) return;
+  const script=document.createElement('script');
+  script.src='./ui-v4.js';
+  script.dataset.travelUiV4='true';
+  document.body.appendChild(script);
+});
