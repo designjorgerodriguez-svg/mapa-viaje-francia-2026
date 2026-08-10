@@ -8,57 +8,27 @@ window.INLAND = [
 {id:207,name:'Bassins naturels du Saison · Uhaitza',category:'Baño interior',lat:43.208,lng:-0.897286,desc:'Zona de baño natural en el río Saison junto al Camping Uhaitza, cerca de Mauléon y en dirección a Tardets. El propio camping anuncia playa acondicionada, piscinas naturales y acceso directo al río.',highlights:'Piscinas naturales · río transparente · pequeña playa · sombra · salto natural · ducha junto al acceso',time:'2–4 h',access:'Acceso asociado al Camping Uhaitza. No lo trataría como playa pública gratuita: consultar en recepción si se puede acceder solo al baño sin alojarse.',dogs:'Sí, el camping admite perros. La web confirma el baño en los bassins naturels, pero no especifica por separado la norma de perros dentro del agua; preguntar al llegar.',tip:'Es la opción más interesante si vais hacia Tardets/Holzarte y queréis combinar el desplazamiento con un baño de río.',source:'https://www.camping-uhaitza.com/presentation-camping-mauleon/'}
 ];
 
-// Capa visual global: paleta petróleo/gris y ajustes de usabilidad.
-(() => {
-  const style = document.createElement('style');
-  style.id = 'travel-theme-v3';
-  style.textContent = `
-    :root{
-      --bg:#1b2b31 !important;
-      --panel:#243940 !important;
-      --surface:#2d454d !important;
-      --surface-2:#344e57 !important;
-      --surface-3:#3c5861 !important;
-      --text:#f4f7f7 !important;
-      --text-soft:#d7dfe0 !important;
-      --muted:#9eadaf !important;
-      --line:rgba(255,255,255,.105) !important;
-      --accent:#8fbeb7 !important;
-      --accent-strong:#5f9f98 !important;
-      --green:#8abca3 !important;
-      --amber:#d0ad73 !important;
-      --shadow:0 18px 48px rgba(20,33,37,.25) !important;
-    }
-    html,body{background:#1b2b31 !important}
-    .sidebar{background:linear-gradient(180deg,#294149 0%,#22373e 100%) !important;border-right-color:rgba(255,255,255,.09) !important;scrollbar-color:#587078 transparent !important}
-    .eyebrow{color:#a3bcc0 !important}.sub,.status{color:#9eadaf !important}
-    .tool{background:rgba(255,255,255,.075) !important;border-color:rgba(255,255,255,.105) !important;color:#f0f4f4 !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.025) !important}
-    .tool:hover{background:rgba(255,255,255,.115) !important;border-color:rgba(255,255,255,.17) !important}
-    .place{background:rgba(255,255,255,.055) !important;border-color:rgba(255,255,255,.09) !important;box-shadow:0 4px 13px rgba(17,31,35,.08) !important}
-    .place:hover{background:rgba(255,255,255,.075) !important;border-color:rgba(255,255,255,.15) !important}.place.open{background:#304950 !important;border-color:rgba(143,190,183,.34) !important}
-    .summary-meta,.filter-option-count,.legend{color:#9aabad !important}.card-chevron{background:rgba(255,255,255,.065) !important;color:#9aabad !important}.place.open .card-chevron{background:rgba(143,190,183,.13) !important;color:#dce9e7 !important}
-    .filter-fab{left:50% !important;right:auto !important;top:14px !important;transform:translateX(-50%) !important;background:rgba(42,65,73,.94) !important;border-color:rgba(255,255,255,.16) !important;box-shadow:0 8px 24px rgba(20,33,37,.22) !important}
-    .filter-fab:active{transform:translateX(-50%) scale(.97) !important}.filter-panel{background:#294149 !important}.leaflet-top.leaflet-right{z-index:1600 !important}
-    @media(max-width:760px){.sidebar{background:linear-gradient(180deg,#294149 0%,#22373e 100%) !important}.sheet-handle{background:linear-gradient(180deg,#294149 72%,rgba(41,65,73,.98)) !important}.filter-fab{left:50% !important;right:auto !important;top:calc(env(safe-area-inset-top,0px) + 10px) !important;transform:translateX(-50%) !important}.filter-fab:active{transform:translateX(-50%) scale(.97) !important}}
-  `;
-  document.head.appendChild(style);
-  const themeMeta = document.querySelector('meta[name="theme-color"]');
-  if (themeMeta) themeMeta.setAttribute('content','#0767F2');
-})();
-
-// Carga fiable de la capa visual moderna después de que el mapa y la app estén listos.
 window.addEventListener('load',()=>{
+  const themeMeta=document.querySelector('meta[name="theme-color"]');
+  if(themeMeta)themeMeta.setAttribute('content','#0767F2');
+
   if(!document.getElementById('travel-manrope')){
     const pre1=document.createElement('link');pre1.rel='preconnect';pre1.href='https://fonts.googleapis.com';document.head.appendChild(pre1);
     const pre2=document.createElement('link');pre2.rel='preconnect';pre2.href='https://fonts.gstatic.com';pre2.crossOrigin='anonymous';document.head.appendChild(pre2);
     const font=document.createElement('link');font.id='travel-manrope';font.rel='stylesheet';font.href='https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap';document.head.appendChild(font);
   }
+
   if(document.getElementById('travel-ui-v4-loader'))return;
   const modern=document.createElement('script');
-  modern.id='travel-ui-v4-loader';modern.src='./ui-v4.js?v=7';
+  modern.id='travel-ui-v4-loader';modern.src='./ui-v4.js?v=8';
   modern.onload=()=>{
     const polish=document.createElement('script');
-    polish.id='travel-ui-v7-loader';polish.src='./ui-v4-fix.js?v=7';
+    polish.id='travel-ui-v7-loader';polish.src='./ui-v4-fix.js?v=8';
+    polish.onload=()=>{
+      const compact=document.createElement('script');
+      compact.id='travel-ui-v8-loader';compact.src='./ui-v8-popup.js?v=8';
+      document.body.appendChild(compact);
+    };
     document.body.appendChild(polish);
   };
   document.body.appendChild(modern);
