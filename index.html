@@ -5,87 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Viaje Francia 2026 · Mapa</title>
   <link rel="preconnect" href="https://unpkg.com">
-  <link rel="preconnect" href="https://tiles.stadiamaps.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    :root{--bg:#0d1117;--panel:#161b22;--card:#21262d;--text:#f0f6fc;--muted:#8b949e;--line:#30363d;--accent:#2f81f7}
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
-    .app{display:grid;grid-template-columns:410px 1fr;height:100vh}.sidebar{background:var(--panel);border-right:1px solid var(--line);overflow:auto;padding:22px}.map{height:100vh}
-    h1{font-size:24px;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;margin-bottom:14px}.location-bar{display:flex;gap:8px;align-items:center;margin-bottom:16px}.locate{border:0;border-radius:10px;padding:10px 12px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer}.locate:disabled{opacity:.55;cursor:wait}.loc-status{font-size:12px;color:var(--muted)}
-    .filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}.filter{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:8px 11px;cursor:pointer}.filter.active{background:var(--accent);border-color:var(--accent)}
-    .list{display:flex;flex-direction:column;gap:12px}.place{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;transition:.15s}.place:hover{border-color:#6e7681;transform:translateY(-1px)}.place h2{font-size:16px;margin:0 0 7px}.meta{font-size:12px;color:var(--muted);margin-bottom:7px}.desc{font-size:13px;line-height:1.5;color:#c9d1d9;margin:0}.facts{margin:11px 0 0;padding:10px 0 0;border-top:1px solid var(--line);display:grid;gap:6px;font-size:12px;line-height:1.4;color:#c9d1d9}.facts b{color:var(--text)}.num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:white;font-weight:700;font-size:12px;margin-right:7px}.links{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.links a{font-size:12px;text-decoration:none;color:white;background:#2f81f7;padding:7px 9px;border-radius:8px}.links a.secondary{background:#30363d}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#161b22;color:#f0f6fc}.popup{max-width:300px}.popup h3{margin:0 0 6px;font-size:16px}.popup p{margin:0 0 7px;line-height:1.4}.popup .mini{font-size:12px;color:#c9d1d9}.popup a{display:inline-block;color:white;background:#2f81f7;text-decoration:none;border-radius:8px;padding:7px 9px;font-weight:600;margin:3px 4px 0 0}.legend{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.45}.leaflet-control-layers{font:13px system-ui}.user-dot{width:18px;height:18px;border-radius:50%;background:#2684ff;border:3px solid white;box-shadow:0 0 0 7px rgba(38,132,255,.2),0 2px 8px rgba(0,0,0,.45)}
-    @media(max-width:760px){.app{grid-template-columns:1fr;grid-template-rows:48vh 52vh}.sidebar{grid-row:2;padding:16px;border-right:0;border-top:1px solid var(--line)}.map{height:48vh;grid-row:1}h1{font-size:20px}}
+    :root{--bg:#0d1117;--panel:#161b22;--card:#21262d;--text:#f0f6fc;--muted:#8b949e;--line:#30363d;--accent:#2f81f7;--ok:#238636;--warn:#9e6a03;--bad:#da3633}
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+    .app{display:grid;grid-template-columns:440px 1fr;height:100vh}.sidebar{background:var(--panel);border-right:1px solid var(--line);overflow:auto;padding:22px}.map{height:100vh}
+    h1{font-size:24px;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;margin-bottom:16px}.filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}.filter{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:7px 10px;cursor:pointer;font-size:12px}.filter.active{background:var(--accent);border-color:var(--accent)}
+    .toolbar{display:flex;gap:8px;margin-bottom:16px}.tool{border:1px solid var(--line);background:#21262d;color:#fff;border-radius:10px;padding:9px 11px;cursor:pointer;font-weight:600}.tool:hover{border-color:#6e7681}.status{font-size:12px;color:var(--muted);margin:-7px 0 14px;min-height:16px}
+    .list{display:flex;flex-direction:column;gap:12px}.place{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;transition:.15s}.place:hover{border-color:#6e7681;transform:translateY(-1px)}.place h2{font-size:16px;margin:0 0 7px}.meta{font-size:12px;color:var(--muted);margin-bottom:8px}.desc{font-size:13px;line-height:1.5;color:#c9d1d9;margin:0}.facts{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:grid;gap:7px;font-size:12px;line-height:1.45;color:#c9d1d9}.facts b{color:var(--text)}
+    .badges{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 0}.badge{padding:5px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#30363d}.badge.access{background:#243447}.badge.dog{background:#1f3d2b}.badge.warn{background:#4d3610}.links{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.links a{font-size:12px;text-decoration:none;color:white;background:#2f81f7;padding:7px 9px;border-radius:8px}.links a.secondary{background:#30363d}
+    .num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:white;font-weight:700;font-size:12px;margin-right:7px}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#161b22;color:#f0f6fc}.popup{max-width:310px}.popup h3{margin:0 0 6px;font-size:16px}.popup p{margin:0 0 7px;line-height:1.4}.popup .mini{font-size:12px;color:#c9d1d9}.popup a{display:inline-block;color:white;background:#2f81f7;text-decoration:none;border-radius:8px;padding:7px 9px;font-weight:600;margin:3px 4px 0 0}.legend{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.45}.leaflet-control-layers{font:13px system-ui}.gps-dot{width:16px;height:16px;border-radius:50%;background:#1685ff;border:3px solid white;box-shadow:0 0 0 5px rgba(22,133,255,.25)}
+    @media(max-width:760px){.app{grid-template-columns:1fr;grid-template-rows:46vh 54vh}.sidebar{grid-row:2;padding:15px;border-right:0;border-top:1px solid var(--line)}.map{height:46vh;grid-row:1}h1{font-size:20px}.toolbar{position:sticky;top:-15px;background:var(--panel);padding:8px 0;z-index:5}}
   </style>
 </head>
 <body>
 <div class="app">
   <aside class="sidebar">
     <h1>Viaje Francia 2026</h1>
-    <div class="sub">Guía interactiva del viaje · 7 lugares guardados</div>
-    <div class="location-bar"><button id="locate" class="locate">📍 Mi ubicación</button><span id="locStatus" class="loc-status"></span></div>
+    <div class="sub" id="subtitle">Guía interactiva del viaje</div>
+    <div class="toolbar"><button class="tool" id="locate">📍 Mi ubicación</button><button class="tool" id="fit">Ver todos</button></div>
+    <div class="status" id="status"></div>
     <div class="filters" id="filters"></div>
     <div class="list" id="list"></div>
-    <div class="legend">Mapa principal: Stadia Outdoors. Puedes cambiar de capa desde el control superior derecho. La ubicación solo se consulta si pulsas “Mi ubicación” y aceptas el permiso del navegador.</div>
+    <div class="legend">Cada ficha indica entrada/precio y situación con perros. Cuando no he encontrado una política fiable, aparece como “no confirmado” en vez de asumirla. Los datos de precios y normas pueden cambiar, así que mantendremos las fuentes enlazadas.</div>
   </aside>
   <div id="map" class="map"></div>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="places.js"></script>
 <script>
-const places = [
-  {id:1,name:'Castillo de Abbadie',category:'Visita',lat:43.3774636,lng:-1.7493127,desc:'Residencia de Antoine d’Abbadie, científico y explorador del siglo XIX. El interior conserva mobiliario de época y una decoración muy singular; se visitan 10 salas.',highlights:'Arquitectura de Viollet-le-Duc · interiores originales · parque y vistas de la costa',time:'1 h 30 – 2 h',practical:'En julio y agosto abre todos los días de 9:30 a 19:00. La reserva es obligatoria. Hay visita guiada en castellano a las 13:00 y visita libre desde las 16:00.',tip:'Si vais en verano, reservar antes de llegar para no condicionar la ruta.',official:'https://www.chateau-abbadia.fr/es/prepara-tu-visita'},
-  {id:2,name:'Puerto de Saint-Jean-de-Luz',category:'Pueblo / costa',lat:43.386836,lng:-1.664119,desc:'Uno de los mejores paseos urbanos de la costa vasco-francesa: puerto pesquero, casco histórico y bahía protegida en un recorrido muy compacto.',highlights:'Puerto pesquero · Rue Gambetta · iglesia de Saint-Jean-Baptiste · paseo marítimo y Grande Plage',time:'1 h 30 – 2 h 30',practical:'El centro histórico se recorre bien a pie. La iglesia de Saint-Jean-Baptiste está vinculada a la boda de Luis XIV y María Teresa de Austria en 1660.',tip:'Merece la pena aparcar fuera del núcleo más céntrico y recorrer puerto, centro y playa andando.',official:'https://www.saint-jean-de-luz.com/'},
-  {id:3,name:'Catedral de Bayona',category:'Visita',lat:43.4906629,lng:-1.4776981,desc:'La catedral de Sainte-Marie está en el corazón del casco histórico de Bayona y forma parte del Patrimonio Mundial de la UNESCO dentro de los Caminos de Santiago de Compostela en Francia.',highlights:'Catedral gótica · claustro · vidriera renacentista · pinturas del siglo XIX · centro histórico',time:'45 min – 1 h; 2–3 h si se combina con Bayona',practical:'La oficina de turismo ofrece visitas guiadas en francés que permiten conocer elementos que normalmente no son accesibles al público.',tip:'No la plantearía como parada aislada: combinarla con Les Halles, las calles del centro y la ribera del Nive.',official:'https://www.visitbayonne.com/'},
-  {id:4,name:'Espelette',category:'Pueblo',lat:43.3411775,lng:-1.4493722,desc:'Pequeño pueblo vasco conocido internacionalmente por el Piment d’Espelette. Su escala permite verlo sin dedicar medio día y funciona muy bien como parada entre costa e interior.',highlights:'Casas tradicionales · fachadas con pimientos · tiendas de producto local · iglesia y calles del centro',time:'1 – 1 h 30',practical:'El pimiento de Espelette es uno de los productos gastronómicos emblemáticos de la zona y cuenta con denominación de origen protegida.',tip:'Buena parada para comer o comprar producto local sin alargar demasiado la jornada.',official:'https://www.mairie-espelette.fr/'},
-  {id:5,name:'Le Train de La Rhune',category:'Actividad',lat:43.3251141,lng:-1.6008848,desc:'Tren de cremallera histórico de 1924 que asciende desde el Col de Saint-Ignace hasta la cima de La Rhune, a 905 m de altitud.',highlights:'Tren histórico · subida de 35 min · panorámica del País Vasco · cima de La Rhune',time:'Aprox. 2 h 30 para la excursión estándar',practical:'Temporada 2026 abierta desde el 28 de marzo. La subida dura unos 35 minutos. Conviene comprobar disponibilidad y comprar billete antes, especialmente en verano.',tip:'Intentaría reservar primera hora o última de la tarde para reducir esperas y evitar las horas de más calor.',official:'https://www.rhune.com/es/'},
-  {id:6,name:'Ciudadela de Saint-Jean-Pied-de-Port',category:'Visita',lat:43.1621726,lng:-1.23351,desc:'La ciudadela domina Saint-Jean-Pied-de-Port desde la colina de Mendiguren, unos 80 m por encima de la localidad. El conjunto resume muy bien la historia militar y jacobea de la villa.',highlights:'Ciudadela · Porte Saint-Jacques · Rue de la Citadelle · murallas · vistas del valle',time:'1 h 30 – 2 h para ciudadela y casco antiguo',practical:'La fortificación actual se levantó a partir de 1625–1627 y fue modificada posteriormente; Vauban inspeccionó la plaza en 1685. En julio y agosto se organizan visitas comentadas.',tip:'Subir hasta la ciudadela aunque no se haga visita guiada: el paseo y las vistas justifican la parada.',official:'https://www.st-jean-pied-de-port.fr/tourisme/visiter-saint-jean-pied-de-port/'},
-  {id:7,name:'Pasarela de Holzarte',category:'Naturaleza',lat:43.0045,lng:-0.92294,desc:'Pasarela suspendida sobre las gargantas de Olhadubi, a más de 180 m de altura. Es una de las caminatas más espectaculares de esta parte de los Pirineos occidentales.',highlights:'Gargantas · pasarela colgante · bosque · senderismo de montaña',time:'Aprox. 2 h ida y vuelta hasta la pasarela; 5 h–5 h 30 la vuelta larga',practical:'El acceso a la pasarela supone aproximadamente 1 h de subida desde Logibar. El sendero es exigente y requiere buen calzado. En 2026 el acceso al paraje es gratuito. Se admiten perros con correa.',tip:'Aparcar cerca de Logibar, 2 km antes de Larrau. En verano existe servicio de lanzadera desde Tardets en parte de julio y agosto.',official:'https://www.tourisme64.com/es/ya-esta-en-el-sitio/actividades/larrau/PNAAQU064FS00005-passerelle-dholzarte/'}
-];
-const colors={Visita:'#2f81f7','Pueblo / costa':'#58a6ff',Pueblo:'#d29922',Actividad:'#db61a2',Naturaleza:'#3fb950'};
+const places=window.PLACES||[];
+const colors={Visita:'#2f81f7','Pueblo / costa':'#58a6ff',Pueblo:'#d29922',Actividad:'#db61a2',Naturaleza:'#3fb950',Artesanía:'#a371f7',Gastronomía:'#f0883e',Pernocta:'#1f6feb',Parking:'#8b949e'};
 const map=L.map('map',{zoomControl:true});
 const outdoors=L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png',{maxZoom:20,attribution:'&copy; Stadia Maps &copy; OpenMapTiles &copy; OpenStreetMap contributors'}).addTo(map);
-const street=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});
 const terrain=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'Map data &copy; OpenStreetMap contributors, SRTM | Map style &copy; OpenTopoMap'});
-L.control.layers({'Stadia Outdoors':outdoors,'OpenStreetMap':street,'Relieve':terrain},null,{position:'topright',collapsed:false}).addTo(map);
+L.control.layers({'Stadia Outdoors':outdoors,'OpenStreetMap':osm,'Relieve':terrain},null,{position:'topright',collapsed:true}).addTo(map);
 const markers=new Map();
-const route=L.polyline(places.map(p=>[p.lat,p.lng]),{color:'#2f81f7',weight:3,opacity:.65,dashArray:'6 7'}).addTo(map);
-map.fitBounds(route.getBounds(),{padding:[30,30]});
-function icon(p){return L.divIcon({className:'',html:`<div style="width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:${colors[p.category]||'#2f81f7'};color:#fff;border:2px solid #fff;box-shadow:0 2px 8px #0008;font:700 12px system-ui">${p.id}</div>`,iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-15]});}
-function popup(p){const g=`https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;return `<div class="popup"><h3>${p.name}</h3><p><b>${p.category}</b></p><p>${p.desc}</p><p class="mini"><b>Tiempo:</b> ${p.time}</p><p class="mini"><b>Consejo:</b> ${p.tip}</p><a href="${g}" target="_blank" rel="noopener">Google Maps</a><a href="${p.official}" target="_blank" rel="noopener">Web oficial</a></div>`}
-places.forEach(p=>{const m=L.marker([p.lat,p.lng],{icon:icon(p)}).bindPopup(popup(p)).addTo(map);markers.set(p.id,m)});
-const cats=['Todos',...new Set(places.map(p=>p.category))];
-const filters=document.getElementById('filters'), list=document.getElementById('list');
-let active='Todos';
-function render(){
- filters.innerHTML='';cats.forEach(c=>{const b=document.createElement('button');b.className='filter'+(c===active?' active':'');b.textContent=c;b.addEventListener('click',()=>{active=c;render()});filters.appendChild(b)});
- list.innerHTML=''; places.filter(p=>active==='Todos'||p.category===active).forEach(p=>{
-   const g=`https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
-   const el=document.createElement('article');el.className='place';
-   el.innerHTML=`<h2><span class="num">${p.id}</span>${p.name}</h2><div class="meta">${p.category}</div><p class="desc">${p.desc}</p><div class="facts"><div><b>Qué merece la pena:</b> ${p.highlights}</div><div><b>Tiempo recomendado:</b> ${p.time}</div><div><b>Información práctica:</b> ${p.practical}</div><div><b>Consejo:</b> ${p.tip}</div></div><div class="links"><a href="${g}" target="_blank" rel="noopener">Abrir en Google Maps</a><a class="secondary" href="${p.official}" target="_blank" rel="noopener">Fuente oficial</a></div>`;
-   el.addEventListener('click',(e)=>{if(e.target.tagName==='A')return;map.setView([p.lat,p.lng],14,{animate:true});markers.get(p.id).openPopup()});list.appendChild(el)
- });
- markers.forEach((m,id)=>{const p=places.find(x=>x.id===id);if(active==='Todos'||p.category===active){if(!map.hasLayer(m))m.addTo(map)}else map.removeLayer(m)});
-}
+const bounds=L.latLngBounds([]);
+function icon(p){return L.divIcon({className:'',html:`<div style="width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:${colors[p.category]||'#2f81f7'};color:#fff;border:2px solid #fff;box-shadow:0 2px 8px #0008;font:700 11px system-ui">${p.id}</div>`,iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-15]});}
+function gmaps(p){return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}`}
+function popup(p){return `<div class="popup"><h3>${p.name}</h3><p><b>${p.category}</b></p><p>${p.desc}</p><p class="mini"><b>Entrada/precio:</b> ${p.access}</p><p class="mini"><b>🐾 Perro:</b> ${p.dogs}</p><p class="mini"><b>Tiempo:</b> ${p.time}</p><a href="${gmaps(p)}" target="_blank" rel="noopener">Google Maps</a><a href="${p.source}" target="_blank" rel="noopener">Fuente</a></div>`}
+places.forEach(p=>{const m=L.marker([p.lat,p.lng],{icon:icon(p)}).bindPopup(popup(p)).addTo(map);markers.set(p.id,m);bounds.extend([p.lat,p.lng])});
+map.fitBounds(bounds,{padding:[30,30]});
+const filters=document.getElementById('filters'),list=document.getElementById('list'),status=document.getElementById('status');document.getElementById('subtitle').textContent=`Guía interactiva · ${places.length} lugares guardados`;
+const cats=['Todos',...new Set(places.map(p=>p.category))];let active='Todos';
+function badgeClass(text,type){return text.includes('No confirmado')||text.includes('⚠️')?'badge warn':`badge ${type}`}
+function render(){filters.innerHTML='';cats.forEach(c=>{const b=document.createElement('button');b.className='filter'+(c===active?' active':'');b.textContent=c;b.addEventListener('click',()=>{active=c;render()});filters.appendChild(b)});list.innerHTML='';places.filter(p=>active==='Todos'||p.category===active).forEach(p=>{const el=document.createElement('article');el.className='place';el.innerHTML=`<h2><span class="num">${p.id}</span>${p.name}</h2><div class="meta">${p.category}</div><p class="desc">${p.desc}</p><div class="badges"><span class="${badgeClass(p.access,'access')}">🎟 ${p.access}</span><span class="${badgeClass(p.dogs,'dog')}">🐾 ${p.dogs}</span></div><div class="facts"><div><b>Qué merece la pena:</b> ${p.highlights}</div><div><b>Tiempo recomendado:</b> ${p.time}</div><div><b>Consejo:</b> ${p.tip}</div></div><div class="links"><a href="${gmaps(p)}" target="_blank" rel="noopener">Abrir en Google Maps</a><a class="secondary" href="${p.source}" target="_blank" rel="noopener">Fuente</a></div>`;el.addEventListener('click',e=>{if(e.target.tagName==='A')return;map.setView([p.lat,p.lng],14,{animate:true});markers.get(p.id).openPopup()});list.appendChild(el)});markers.forEach((m,id)=>{const p=places.find(x=>x.id===id);if(active==='Todos'||p.category===active){if(!map.hasLayer(m))m.addTo(map)}else map.removeLayer(m)})}
 render();
-
-const locateBtn=document.getElementById('locate');
-const locStatus=document.getElementById('locStatus');
-let userMarker=null, accuracyCircle=null;
-locateBtn.addEventListener('click',()=>{
-  if(!navigator.geolocation){locStatus.textContent='GPS no disponible en este navegador';return;}
-  locateBtn.disabled=true;locStatus.textContent='Buscando ubicación…';
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const lat=pos.coords.latitude,lng=pos.coords.longitude,acc=pos.coords.accuracy;
-    if(userMarker) map.removeLayer(userMarker); if(accuracyCircle) map.removeLayer(accuracyCircle);
-    const userIcon=L.divIcon({className:'',html:'<div class="user-dot"></div>',iconSize:[18,18],iconAnchor:[9,9]});
-    userMarker=L.marker([lat,lng],{icon:userIcon,zIndexOffset:1000}).addTo(map).bindPopup(`<div class="popup"><h3>Tu ubicación</h3><p class="mini">Precisión aproximada: ${Math.round(acc)} m</p></div>`);
-    accuracyCircle=L.circle([lat,lng],{radius:acc,weight:1,opacity:.45,fillOpacity:.08}).addTo(map);
-    map.setView([lat,lng],Math.max(map.getZoom(),14),{animate:true});userMarker.openPopup();
-    locStatus.textContent=`Precisión aprox. ${Math.round(acc)} m`;locateBtn.disabled=false;
-  },err=>{
-    const msg=err.code===1?'Permiso de ubicación rechazado':err.code===2?'No se pudo obtener la ubicación':'La ubicación tardó demasiado';
-    locStatus.textContent=msg;locateBtn.disabled=false;
-  },{enableHighAccuracy:true,timeout:12000,maximumAge:30000});
-});
+document.getElementById('fit').addEventListener('click',()=>map.fitBounds(bounds,{padding:[30,30]}));
+let userMarker,userAccuracy;
+document.getElementById('locate').addEventListener('click',()=>{if(!navigator.geolocation){status.textContent='Este navegador no permite geolocalización.';return}status.textContent='Buscando tu ubicación…';navigator.geolocation.getCurrentPosition(pos=>{const {latitude,longitude,accuracy}=pos.coords;if(userMarker)map.removeLayer(userMarker);if(userAccuracy)map.removeLayer(userAccuracy);userAccuracy=L.circle([latitude,longitude],{radius:accuracy,color:'#1685ff',weight:1,fillOpacity:.08}).addTo(map);userMarker=L.marker([latitude,longitude],{icon:L.divIcon({className:'',html:'<div class="gps-dot"></div>',iconSize:[16,16],iconAnchor:[8,8]})}).bindPopup(`Tu ubicación<br><small>Precisión aproximada: ${Math.round(accuracy)} m</small>`).addTo(map);map.setView([latitude,longitude],15);userMarker.openPopup();status.textContent=`Ubicación encontrada · precisión aprox. ${Math.round(accuracy)} m`;},err=>{status.textContent=err.code===1?'Permiso de ubicación denegado.':'No se ha podido obtener tu ubicación.';},{enableHighAccuracy:true,timeout:12000,maximumAge:30000})});
 </script>
 </body>
 </html>
