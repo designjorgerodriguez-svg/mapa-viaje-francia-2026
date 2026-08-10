@@ -9,10 +9,9 @@
   <style>
     :root{--bg:#0d1117;--panel:#161b22;--card:#21262d;--text:#f0f6fc;--muted:#8b949e;--line:#30363d;--accent:#2f81f7;--green:#3fb950;--orange:#d29922;--pink:#db61a2}
     *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
-    .app{display:grid;grid-template-columns:370px 1fr;height:100vh}.sidebar{background:var(--panel);border-right:1px solid var(--line);overflow:auto;padding:22px}.map{height:100vh}
+    .app{display:grid;grid-template-columns:410px 1fr;height:100vh}.sidebar{background:var(--panel);border-right:1px solid var(--line);overflow:auto;padding:22px}.map{height:100vh}
     h1{font-size:24px;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;margin-bottom:18px}.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}.filter{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:8px 11px;cursor:pointer}.filter.active{background:var(--accent);border-color:var(--accent)}
-    .list{display:flex;flex-direction:column;gap:10px}.place{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;transition:.15s}.place:hover{border-color:#6e7681;transform:translateY(-1px)}.place h2{font-size:16px;margin:0 0 7px}.meta{font-size:12px;color:var(--muted);margin-bottom:7px}.desc{font-size:13px;line-height:1.45;color:#c9d1d9;margin:0}.num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:white;font-weight:700;font-size:12px;margin-right:7px}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#161b22;color:#f0f6fc}.popup h3{margin:0 0 6px;font-size:16px}.popup p{margin:0 0 9px;line-height:1.4}.popup a{display:inline-block;color:white;background:#2f81f7;text-decoration:none;border-radius:8px;padding:7px 9px;font-weight:600}
-    .legend{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+    .list{display:flex;flex-direction:column;gap:12px}.place{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;transition:.15s}.place:hover{border-color:#6e7681;transform:translateY(-1px)}.place h2{font-size:16px;margin:0 0 7px}.meta{font-size:12px;color:var(--muted);margin-bottom:7px}.desc{font-size:13px;line-height:1.5;color:#c9d1d9;margin:0}.facts{margin:11px 0 0;padding:10px 0 0;border-top:1px solid var(--line);display:grid;gap:6px;font-size:12px;line-height:1.4;color:#c9d1d9}.facts b{color:var(--text)}.num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:white;font-weight:700;font-size:12px;margin-right:7px}.links{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.links a{font-size:12px;text-decoration:none;color:white;background:#2f81f7;padding:7px 9px;border-radius:8px}.links a.secondary{background:#30363d}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#161b22;color:#f0f6fc}.popup{max-width:300px}.popup h3{margin:0 0 6px;font-size:16px}.popup p{margin:0 0 7px;line-height:1.4}.popup .mini{font-size:12px;color:#c9d1d9}.popup a{display:inline-block;color:white;background:#2f81f7;text-decoration:none;border-radius:8px;padding:7px 9px;font-weight:600;margin:3px 4px 0 0}.legend{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.45}.leaflet-control-layers{font:13px system-ui}
     @media(max-width:760px){.app{grid-template-columns:1fr;grid-template-rows:48vh 52vh}.sidebar{grid-row:2;padding:16px;border-right:0;border-top:1px solid var(--line)}.map{height:48vh;grid-row:1}h1{font-size:20px}}
   </style>
 </head>
@@ -20,38 +19,89 @@
 <div class="app">
   <aside class="sidebar">
     <h1>Viaje Francia 2026</h1>
-    <div class="sub">Mapa vivo del viaje · 7 lugares guardados</div>
+    <div class="sub">Guía interactiva del viaje · 7 lugares guardados</div>
     <div class="filters" id="filters"></div>
     <div class="list" id="list"></div>
-    <div class="legend">Los puntos están en el orden de la ruta original. Iremos añadiendo áreas camper, parkings, rutas, pueblos y sitios de interés.</div>
+    <div class="legend">Usa el selector de capas del mapa para cambiar entre mapa, satélite y relieve. Los datos prácticos se irán ampliando con parkings, áreas camper y nuevas rutas.</div>
   </aside>
   <div id="map" class="map"></div>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const places = [
-  {id:1,name:'Castillo de Abbadie',category:'Visita',lat:43.3774636,lng:-1.7493127,desc:'Castillo neogótico sobre la costa de Hendaya, rodeado de jardines y con vistas al Atlántico.'},
-  {id:2,name:'Puerto de Saint-Jean-de-Luz',category:'Pueblo / costa',lat:43.386836,lng:-1.664119,desc:'Puerto pesquero y casco histórico junto a la bahía. Buen punto para pasear por el centro y el frente marítimo.'},
-  {id:3,name:'Catedral de Bayona',category:'Visita',lat:43.4906629,lng:-1.4776981,desc:'Catedral gótica en pleno casco histórico de Bayona. Ideal para combinar con un paseo por las calles del centro.'},
-  {id:4,name:'Espelette',category:'Pueblo',lat:43.3411775,lng:-1.4493722,desc:'Pueblo vasco-francés conocido por sus fachadas blancas, entramados rojos y el famoso pimiento de Espelette.'},
-  {id:5,name:'Le Train de La Rhune',category:'Actividad',lat:43.3251141,lng:-1.6008848,desc:'Tren de cremallera que asciende a La Rhune. Una de las excursiones clásicas de la zona por las vistas panorámicas.'},
-  {id:6,name:'Ciudadela de San Juan Pie de Puerto',category:'Visita',lat:43.1621726,lng:-1.23351,desc:'Ciudadela y casco medieval de Saint-Jean-Pied-de-Port, una de las localidades más características del País Vasco francés.'},
-  {id:7,name:'Pasarela de Holzarte',category:'Naturaleza',lat:43.0048234,lng:-0.9228901,desc:'Pasarela colgante sobre las gargantas de Holzarte. Parada de naturaleza y senderismo en un entorno de montaña espectacular.'}
+  {id:1,name:'Castillo de Abbadie',category:'Visita',lat:43.3774636,lng:-1.7493127,
+   desc:'Residencia de Antoine d’Abbadie, científico y explorador del siglo XIX. El interior conserva mobiliario de época y una decoración muy singular; se visitan 10 salas.',
+   highlights:'Arquitectura de Viollet-le-Duc · interiores originales · parque y vistas de la costa',
+   time:'1 h 30 – 2 h',
+   practical:'En julio y agosto abre todos los días de 9:30 a 19:00. La reserva es obligatoria. Hay visita guiada en castellano a las 13:00 y visita libre desde las 16:00.',
+   tip:'Si vais en verano, reservar antes de llegar para no condicionar la ruta.',
+   official:'https://www.chateau-abbadia.fr/es/prepara-tu-visita'},
+  {id:2,name:'Puerto de Saint-Jean-de-Luz',category:'Pueblo / costa',lat:43.386836,lng:-1.664119,
+   desc:'Uno de los mejores paseos urbanos de la costa vasco-francesa: puerto pesquero, casco histórico y bahía protegida en un recorrido muy compacto.',
+   highlights:'Puerto pesquero · Rue Gambetta · iglesia de Saint-Jean-Baptiste · paseo marítimo y Grande Plage',
+   time:'1 h 30 – 2 h 30',
+   practical:'El centro histórico se recorre bien a pie. La iglesia de Saint-Jean-Baptiste está vinculada a la boda de Luis XIV y María Teresa de Austria en 1660.',
+   tip:'Merece la pena aparcar fuera del núcleo más céntrico y recorrer puerto, centro y playa andando.',
+   official:'https://www.saint-jean-de-luz.com/'},
+  {id:3,name:'Catedral de Bayona',category:'Visita',lat:43.4906629,lng:-1.4776981,
+   desc:'La catedral de Sainte-Marie está en el corazón del casco histórico de Bayona y forma parte del Patrimonio Mundial de la UNESCO dentro de los Caminos de Santiago de Compostela en Francia.',
+   highlights:'Catedral gótica · claustro · vidriera renacentista · pinturas del siglo XIX · centro histórico',
+   time:'45 min – 1 h; 2–3 h si se combina con Bayona',
+   practical:'La oficina de turismo ofrece visitas guiadas en francés que permiten conocer elementos que normalmente no son accesibles al público.',
+   tip:'No la plantearía como parada aislada: combinarla con Les Halles, las calles del centro y la ribera del Nive.',
+   official:'https://www.visitbayonne.com/'},
+  {id:4,name:'Espelette',category:'Pueblo',lat:43.3411775,lng:-1.4493722,
+   desc:'Pequeño pueblo vasco conocido internacionalmente por el Piment d’Espelette. Su escala permite verlo sin dedicar medio día y funciona muy bien como parada entre costa e interior.',
+   highlights:'Casas tradicionales · fachadas con pimientos · tiendas de producto local · iglesia y calles del centro',
+   time:'1 – 1 h 30',
+   practical:'El pimiento de Espelette es uno de los productos gastronómicos emblemáticos de la zona y cuenta con denominación de origen protegida.',
+   tip:'Buena parada para comer o comprar producto local sin alargar demasiado la jornada.',
+   official:'https://www.mairie-espelette.fr/'},
+  {id:5,name:'Le Train de La Rhune',category:'Actividad',lat:43.3251141,lng:-1.6008848,
+   desc:'Tren de cremallera histórico de 1924 que asciende desde el Col de Saint-Ignace hasta la cima de La Rhune, a 905 m de altitud.',
+   highlights:'Tren histórico · subida de 35 min · panorámica del País Vasco · cima de La Rhune',
+   time:'Aprox. 2 h 30 para la excursión estándar',
+   practical:'Temporada 2026 abierta desde el 28 de marzo. La subida dura unos 35 minutos. Conviene comprobar disponibilidad y comprar billete antes, especialmente en verano.',
+   tip:'Intentaría reservar primera hora o última de la tarde para reducir esperas y evitar las horas de más calor.',
+   official:'https://www.rhune.com/es/'},
+  {id:6,name:'Ciudadela de Saint-Jean-Pied-de-Port',category:'Visita',lat:43.1621726,lng:-1.23351,
+   desc:'La ciudadela domina Saint-Jean-Pied-de-Port desde la colina de Mendiguren, unos 80 m por encima de la localidad. El conjunto resume muy bien la historia militar y jacobea de la villa.',
+   highlights:'Ciudadela · Porte Saint-Jacques · Rue de la Citadelle · murallas · vistas del valle',
+   time:'1 h 30 – 2 h para ciudadela y casco antiguo',
+   practical:'La fortificación actual se levantó a partir de 1625–1627 y fue modificada posteriormente; Vauban inspeccionó la plaza en 1685. En julio y agosto se organizan visitas comentadas.',
+   tip:'Subir hasta la ciudadela aunque no se haga visita guiada: el paseo y las vistas justifican la parada.',
+   official:'https://www.st-jean-pied-de-port.fr/tourisme/visiter-saint-jean-pied-de-port/'},
+  {id:7,name:'Pasarela de Holzarte',category:'Naturaleza',lat:43.0045,lng:-0.92294,
+   desc:'Pasarela suspendida sobre las gargantas de Olhadubi, a más de 180 m de altura. Es una de las caminatas más espectaculares de esta parte de los Pirineos occidentales.',
+   highlights:'Gargantas · pasarela colgante · bosque · senderismo de montaña',
+   time:'Aprox. 2 h ida y vuelta hasta la pasarela; 5 h–5 h 30 la vuelta larga',
+   practical:'El acceso a la pasarela supone aproximadamente 1 h de subida desde Logibar. El sendero es exigente y requiere buen calzado. En 2026 el acceso al paraje es gratuito. Se admiten perros con correa.',
+   tip:'Aparcar cerca de Logibar, 2 km antes de Larrau. En verano existe servicio de lanzadera desde Tardets en parte de julio y agosto.',
+   official:'https://www.tourisme64.com/es/ya-esta-en-el-sitio/actividades/larrau/PNAAQU064FS00005-passerelle-dholzarte/'}
 ];
 const colors={Visita:'#2f81f7','Pueblo / costa':'#58a6ff',Pueblo:'#d29922',Actividad:'#db61a2',Naturaleza:'#3fb950'};
 const map=L.map('map',{zoomControl:true});
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+const street=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+const satellite=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles &copy; Esri'});
+const terrain=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'Map data &copy; OpenStreetMap contributors, SRTM | Map style &copy; OpenTopoMap'});
+L.control.layers({'Mapa':street,'Satélite':satellite,'Relieve':terrain},null,{position:'topright',collapsed:false}).addTo(map);
 const markers=new Map();
-const route=L.polyline(places.map(p=>[p.lat,p.lng]),{color:'#2f81f7',weight:3,opacity:.6,dashArray:'6 7'}).addTo(map);
+const route=L.polyline(places.map(p=>[p.lat,p.lng]),{color:'#2f81f7',weight:3,opacity:.65,dashArray:'6 7'}).addTo(map);
 map.fitBounds(route.getBounds(),{padding:[30,30]});
 function icon(p){return L.divIcon({className:'',html:`<div style="width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:${colors[p.category]||'#2f81f7'};color:#fff;border:2px solid #fff;box-shadow:0 2px 8px #0008;font:700 12px system-ui">${p.id}</div>`,iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-15]});}
-function popup(p){const g=`https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;return `<div class="popup"><h3>${p.name}</h3><p><b>${p.category}</b></p><p>${p.desc}</p><a href="${g}" target="_blank" rel="noopener">Abrir en Google Maps</a></div>`}
+function popup(p){const g=`https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;return `<div class="popup"><h3>${p.name}</h3><p><b>${p.category}</b></p><p>${p.desc}</p><p class="mini"><b>Tiempo:</b> ${p.time}</p><p class="mini"><b>Consejo:</b> ${p.tip}</p><a href="${g}" target="_blank" rel="noopener">Google Maps</a><a href="${p.official}" target="_blank" rel="noopener">Web oficial</a></div>`}
 places.forEach(p=>{const m=L.marker([p.lat,p.lng],{icon:icon(p)}).bindPopup(popup(p)).addTo(map);markers.set(p.id,m)});
 const cats=['Todos',...new Set(places.map(p=>p.category))];
 const filters=document.getElementById('filters'), list=document.getElementById('list');
 let active='Todos';
-function render(){filters.innerHTML='';cats.forEach(c=>{const b=document.createElement('button');b.className='filter'+(c===active?' active':'');b.textContent=c;b.onclick=()=>{active=c;render()};filters.appendChild(b)});
- list.innerHTML=''; places.filter(p=>active==='Todos'||p.category===active).forEach(p=>{const el=document.createElement('article');el.className='place';el.innerHTML=`<h2><span class="num">${p.id}</span>${p.name}</h2><div class="meta">${p.category}</div><p class="desc">${p.desc}</p>`;el.onclick=()=>{map.setView([p.lat,p.lng],14,{animate:true});markers.get(p.id).openPopup()};list.appendChild(el)});
+function render(){
+ filters.innerHTML='';cats.forEach(c=>{const b=document.createElement('button');b.className='filter'+(c===active?' active':'');b.textContent=c;b.addEventListener('click',()=>{active=c;render()});filters.appendChild(b)});
+ list.innerHTML=''; places.filter(p=>active==='Todos'||p.category===active).forEach(p=>{
+   const g=`https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
+   const el=document.createElement('article');el.className='place';
+   el.innerHTML=`<h2><span class="num">${p.id}</span>${p.name}</h2><div class="meta">${p.category}</div><p class="desc">${p.desc}</p><div class="facts"><div><b>Qué merece la pena:</b> ${p.highlights}</div><div><b>Tiempo recomendado:</b> ${p.time}</div><div><b>Información práctica:</b> ${p.practical}</div><div><b>Consejo:</b> ${p.tip}</div></div><div class="links"><a href="${g}" target="_blank" rel="noopener">Abrir en Google Maps</a><a class="secondary" href="${p.official}" target="_blank" rel="noopener">Fuente oficial</a></div>`;
+   el.addEventListener('click',(e)=>{if(e.target.tagName==='A')return;map.setView([p.lat,p.lng],14,{animate:true});markers.get(p.id).openPopup()});list.appendChild(el)
+ });
  markers.forEach((m,id)=>{const p=places.find(x=>x.id===id);if(active==='Todos'||p.category===active){if(!map.hasLayer(m))m.addTo(map)}else map.removeLayer(m)});
 }
 render();
