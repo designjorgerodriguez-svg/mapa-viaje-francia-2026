@@ -1,56 +1,176 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Viaje Francia 2026 · Mapa</title>
 <meta name="theme-color" content="#161b22"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Viaje Francia"/>
-<link rel="manifest" href="./manifest.webmanifest"/><link rel="icon" href="./icon.svg" type="image/svg+xml"/><link rel="apple-touch-icon" href="./icon.svg"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Viaje Francia"/>
+<link rel="manifest" href="./manifest.webmanifest"/>
+<link rel="icon" href="./icon.svg" type="image/svg+xml"/>
+<link rel="apple-touch-icon" href="./icon.svg"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 :root{--bg:#0d1117;--panel:#161b22;--card:#21262d;--text:#f0f6fc;--muted:#8b949e;--line:#30363d;--accent:#2f81f7}
 *{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}body{overflow:hidden}
 .app{display:grid;grid-template-columns:440px 1fr;height:100vh;height:100dvh;position:relative}.sidebar{background:var(--panel);border-right:1px solid var(--line);overflow:auto;padding:22px}.map{height:100vh;height:100dvh}
 h1{font-size:24px;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;margin-bottom:16px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.tool{border:1px solid var(--line);background:var(--card);color:#fff;border-radius:10px;padding:9px 11px;cursor:pointer;font-weight:600}.tool:active{transform:translateY(1px)}.status{font-size:12px;color:var(--muted);margin:-7px 0 14px;min-height:16px}.filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}.filter{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:7px 10px;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;gap:6px}.filter.active{background:var(--accent);border-color:var(--accent)}
-.list{display:flex;flex-direction:column;gap:12px}.place{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;transition:.15s}.place:hover{border-color:#6e7681;transform:translateY(-1px)}.place h2{font-size:16px;margin:0 0 7px;display:flex;align-items:center;gap:8px}.meta{font-size:12px;color:var(--muted);margin-bottom:8px}.desc{font-size:13px;line-height:1.5;color:#c9d1d9;margin:0}.facts{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:grid;gap:7px;font-size:12px;line-height:1.45;color:#c9d1d9}.facts b{color:var(--text)}.badges{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.badge{padding:5px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#30363d}.badge.access{background:#243447}.badge.dog{background:#1f3d2b}.badge.warn{background:#4d3610}.links{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.links a{font-size:12px;text-decoration:none;color:#fff;background:#2f81f7;padding:7px 9px;border-radius:8px}.links a.secondary{background:#30363d}
+.list{display:flex;flex-direction:column;gap:8px}.place{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;transition:border-color .15s,background .15s}.place:hover{border-color:#6e7681}.place.open{border-color:#4a5563}.place-summary{width:100%;border:0;background:transparent;color:inherit;padding:11px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;text-align:left;cursor:pointer}.place-summary:active{background:rgba(255,255,255,.025)}.summary-copy{min-width:0}.summary-title{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.summary-meta{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.summary-side{display:flex;align-items:center;gap:7px}.quick-badges{display:flex;gap:5px;align-items:center}.quick{font-size:10px;font-weight:700;padding:4px 6px;border-radius:999px;background:#30363d;white-space:nowrap}.quick.dog{background:#1f3d2b}.quick.warn{background:#4d3610}.card-chevron{width:18px;height:18px;display:grid;place-items:center;transition:transform .18s ease;color:#8b949e}.card-chevron svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}.place.open .card-chevron{transform:rotate(180deg);color:#fff}
+.place-body{display:none;padding:0 13px 13px}.place.open .place-body{display:block}.place-body .desc{font-size:13px;line-height:1.5;color:#c9d1d9;margin:2px 0 0}.facts{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:grid;gap:7px;font-size:12px;line-height:1.45;color:#c9d1d9}.facts b{color:var(--text)}.badges{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.badge{padding:5px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#30363d}.badge.access{background:#243447}.badge.dog{background:#1f3d2b}.badge.warn{background:#4d3610}.links{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.links a,.map-jump{font-size:12px;text-decoration:none;color:#fff;background:#2f81f7;padding:7px 9px;border-radius:8px;border:0;cursor:pointer;font-weight:600}.links a.secondary{background:#30363d}.map-jump{background:#238636}
 .cat-icon,.filter-icon{display:inline-grid;place-items:center;border-radius:50%;flex:0 0 auto}.cat-icon{width:28px;height:28px}.filter-icon{width:16px;height:16px}.cat-icon svg{width:15px;height:15px}.filter-icon svg{width:10px;height:10px}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#161b22;color:#f0f6fc}.leaflet-popup-content{margin:14px 16px}.popup{width:min(330px,72vw)}.popup h3{margin:0 0 5px;font-size:16px;display:flex;align-items:center;gap:8px}.popup .category{font-size:11px;color:var(--muted);margin:0 0 9px}.popup .desc{font-size:12px;line-height:1.45;color:#d0d7de;margin:0}.popup-badges{display:grid;gap:6px;margin:10px 0}.popup-badge{padding:8px 9px;border-radius:9px;font-size:11px;line-height:1.35;font-weight:650}.popup-badge.access{background:#243447}.popup-badge.dog{background:#1f3d2b}.popup-badge.warn{background:#4d3610}.popup-facts{border-top:1px solid var(--line);padding-top:9px;display:grid;gap:6px;font-size:11px;line-height:1.4;color:#c9d1d9}.popup-facts b{color:#fff}.popup-tip{margin-top:9px;padding:8px 9px;border-radius:9px;background:#272d35;font-size:11px;line-height:1.4;color:#e6edf3}.popup a{display:inline-block;color:#fff;background:#2f81f7;text-decoration:none;border-radius:8px;padding:7px 9px;font-size:11px;font-weight:600;margin:9px 4px 0 0}.popup a.secondary{background:#30363d}.legend{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.45}.gps-dot{width:16px;height:16px;border-radius:50%;background:#1685ff;border:3px solid white;box-shadow:0 0 0 5px rgba(22,133,255,.25)}
 .install-help{display:none}.sheet-handle{display:none}
 @media(max-width:760px){
  body{overflow:hidden}.app{display:block;height:100dvh}.map{position:absolute;inset:0;width:100%;height:100dvh}
  .sidebar{position:fixed;z-index:1200;left:0;right:0;bottom:0;height:54dvh;padding:0 15px 18px;border:0;border-top:1px solid var(--line);border-radius:18px 18px 0 0;box-shadow:0 -10px 32px #0008;overflow:auto;overscroll-behavior:contain;transition:height .28s cubic-bezier(.2,.8,.2,1);touch-action:pan-y;background:var(--panel)}
- .sidebar.dragging{transition:none;user-select:none}.sidebar.collapsed{height:54px;overflow:hidden}.sidebar.expanded{height:calc(100dvh - env(safe-area-inset-top,0px) - 6px)}
- .sheet-handle{display:flex;position:sticky;top:0;z-index:20;height:48px;margin:0 -15px 10px;padding:6px 12px;align-items:center;justify-content:center;background:linear-gradient(var(--panel) 78%,rgba(22,27,34,.96));border-radius:18px 18px 0 0;touch-action:none;cursor:ns-resize}
- .grabber{position:absolute;top:7px;width:38px;height:4px;border-radius:99px;background:#6e7681}.sheet-controls{display:flex;gap:8px;margin-top:10px}.sheet-arrow{width:34px;height:28px;border:0;border-radius:999px;background:#272d35;color:#fff;font-size:19px;line-height:1;display:grid;place-items:center;cursor:pointer}.sheet-arrow:disabled{opacity:.22;pointer-events:none}
- .sidebar.collapsed .sheet-handle{margin-bottom:0}.sidebar.collapsed .sheet-arrow.down{display:none}.sidebar.collapsed .sheet-arrow.up{display:grid}.sidebar.collapsed .sheet-controls{margin-top:8px}
+ .sidebar.dragging{transition:none;user-select:none}.sidebar.collapsed{height:58px;overflow:hidden}.sidebar.expanded{height:calc(100dvh - env(safe-area-inset-top,0px) - 6px)}
+ .sheet-handle{display:flex;position:sticky;top:0;z-index:20;height:52px;margin:0 -15px 10px;padding:5px 12px;align-items:center;justify-content:center;background:linear-gradient(var(--panel) 80%,rgba(22,27,34,.96));border-radius:18px 18px 0 0;touch-action:none;cursor:ns-resize}
+ .grabber{position:absolute;top:6px;width:42px;height:4px;border-radius:99px;background:#6e7681}.sheet-controls{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px}.sheet-arrow{width:46px;height:38px;padding:0;border:1px solid rgba(255,255,255,.09);border-radius:999px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.075);color:#fff;line-height:0;box-shadow:0 3px 12px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:transform .14s ease,background .14s ease,opacity .14s ease;cursor:pointer}.sheet-arrow svg{display:block;width:25px;height:25px;overflow:visible;pointer-events:none}.sheet-arrow svg path{fill:none;stroke:#fff;stroke-width:2.35;stroke-linecap:round;stroke-linejoin:round}.sheet-arrow:active{transform:scale(.94);background:rgba(255,255,255,.14)}.sheet-arrow:disabled{opacity:.2;box-shadow:none;pointer-events:none}
+ .sidebar.collapsed .sheet-handle{margin-bottom:0}.sidebar.collapsed .sheet-arrow.down{display:none}.sidebar.collapsed .sheet-arrow.up{display:flex}.sidebar.collapsed .sheet-controls{margin-top:6px}.sidebar.collapsed .sheet-arrow{height:36px}
  h1{font-size:20px}.toolbar{position:relative;background:var(--panel);padding:0;z-index:5}.install-help{display:inline-flex}.popup{width:min(315px,78vw)}
+ .list{gap:7px}.place-summary{padding:10px 11px}.summary-title{font-size:13px}.quick{font-size:9px;padding:4px 5px}.quick-badges{gap:4px}
 }
 </style>
 </head>
 <body><div class="app">
 <aside class="sidebar" id="sheet">
- <div class="sheet-handle" id="sheetHandle"><span class="grabber"></span><div class="sheet-controls"><button class="sheet-arrow down" id="sheetDown" aria-label="Bajar panel">⌄</button><button class="sheet-arrow up" id="sheetUp" aria-label="Subir panel">⌃</button></div></div>
+ <div class="sheet-handle" id="sheetHandle">
+   <span class="grabber"></span>
+   <div class="sheet-controls">
+     <button class="sheet-arrow down" id="sheetDown" aria-label="Bajar panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 9.25 12 15.75l6.5-6.5"/></svg></button>
+     <button class="sheet-arrow up" id="sheetUp" aria-label="Subir panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 14.75 12 8.25l6.5 6.5"/></svg></button>
+   </div>
+ </div>
  <h1>Viaje Francia 2026</h1><div class="sub" id="subtitle"></div>
  <div class="toolbar"><button class="tool" id="locate">📍 Mi ubicación</button><button class="tool" id="fit">Ver visibles</button><button class="tool install-help" id="installApp">⇩ Instalar</button></div>
- <div class="status" id="status"></div><div class="filters" id="filters"></div><div class="list" id="list"></div><div class="legend">Puedes combinar varios tipos a la vez. “Todos” restablece el mapa completo. Las playas y baños interiores con perro incluyen la norma concreta de acceso; en verano conviene comprobar también la señalización local.</div>
-</aside><div id="map" class="map"></div></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="places.js"></script><script src="beaches.js"></script><script src="inland.js"></script>
+ <div class="status" id="status"></div><div class="filters" id="filters"></div><div class="list" id="list"></div>
+ <div class="legend">Toca un lugar para desplegar su ficha completa. Puedes combinar varios tipos a la vez. “Todos” restablece el mapa completo.</div>
+</aside>
+<div id="map" class="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="places.js"></script><script src="beaches.js"></script><script src="inland.js"></script>
 <script>
 const places=[...(window.PLACES||[]),...(window.BEACHES||[]),...(window.INLAND||[])];
 const colors={Visita:'#2f81f7','Pueblo / costa':'#58a6ff',Pueblo:'#d29922',Actividad:'#db61a2',Naturaleza:'#3fb950',Artesanía:'#a371f7',Gastronomía:'#f0883e',Pernocta:'#1f6feb',Parking:'#8b949e','Playa con perro':'#0ea5a8','Baño interior':'#14b8a6'};
 const svgs={Visita:'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 20h16M6 20V8l6-4 6 4v12M9 20v-6h6v6"/></svg>','Pueblo / costa':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 10c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2M3 15c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2"/></svg>',Pueblo:'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 11.5 12 5l8 6.5V20H4zM10 20v-5h4v5"/></svg>',Actividad:'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M6 20V4M6 5h10l-2 3 2 3H6"/></svg>',Naturaleza:'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 19 10 8l4 6 2-3 5 8H3z"/></svg>',Artesanía:'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M8 4h8M10 4v4l-3 4a5 5 0 0 0 10 0l-3-4V4"/></svg>',Gastronomía:'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M8 4h8v4a4 4 0 0 1-8 0V4zM12 12v6M9 20h6"/></svg>',Pernocta:'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 13a7 7 0 1 1-8-8 5.5 5.5 0 0 0 8 8z"/></svg>',Parking:'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M8 20V4h6a4 4 0 0 1 0 8H8"/></svg>','Playa con perro':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M4 15c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2M5 8l2-2 2 2M15 8l2-2 2 2"/></svg>','Baño interior':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M3 16c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2M5 10h14M7 10l3-5 4 5"/></svg>'};
-const map=L.map('map',{zoomControl:true});const outdoors=L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png',{maxZoom:20,attribution:'&copy; Stadia Maps &copy; OpenMapTiles &copy; OpenStreetMap contributors'}).addTo(map);const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});const terrain=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'&copy; OpenStreetMap contributors · SRTM · OpenTopoMap'});L.control.layers({'Stadia Outdoors':outdoors,'OpenStreetMap':osm,'Relieve':terrain},null,{collapsed:true}).addTo(map);
-const markers=new Map(),bounds=L.latLngBounds([]);function svgFor(c){return svgs[c]||svgs.Visita}function iconHtml(c,cls='cat-icon'){return `<span class="${cls}" style="background:${colors[c]||'#2f81f7'}">${svgFor(c)}</span>`}function icon(p){return L.divIcon({className:'',html:`<div style="width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:${colors[p.category]||'#2f81f7'};border:2px solid #fff;box-shadow:0 2px 8px #0008">${svgFor(p.category)}</div>`,iconSize:[32,32],iconAnchor:[16,16],popupAnchor:[0,-16]})}function gmaps(p){return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}`}function popupBadgeClass(text,type){return text.includes('No confirmado')||text.includes('⚠️')?'popup-badge warn':`popup-badge ${type}`}function popup(p){return `<div class="popup"><h3>${iconHtml(p.category)}${p.name}</h3><div class="category">${p.category}</div><p class="desc">${p.desc}</p><div class="popup-badges"><div class="${popupBadgeClass(p.access,'access')}">🎟 <b>Entrada / precio:</b> ${p.access}</div><div class="${popupBadgeClass(p.dogs,'dog')}">🐾 <b>Perros:</b> ${p.dogs}</div></div><div class="popup-facts"><div><b>Qué merece la pena:</b> ${p.highlights}</div><div><b>Tiempo recomendado:</b> ${p.time}</div></div><div class="popup-tip"><b>Consejo:</b> ${p.tip}</div><a href="${gmaps(p)}" target="_blank" rel="noopener">Google Maps</a><a class="secondary" href="${p.source}" target="_blank" rel="noopener">Fuente</a></div>`}
-places.forEach(p=>{const m=L.marker([p.lat,p.lng],{icon:icon(p)}).bindPopup(popup(p),{maxWidth:360}).addTo(map);markers.set(p.id,m);bounds.extend([p.lat,p.lng])});map.fitBounds(bounds,{padding:[30,30]});
-const filters=document.getElementById('filters'),list=document.getElementById('list'),status=document.getElementById('status');document.getElementById('subtitle').textContent=`Guía interactiva · ${places.length} lugares guardados`;const cats=[...new Set(places.map(p=>p.category))];let selected=new Set();function visible(p){return selected.size===0||selected.has(p.category)}function badgeClass(t,type){return t.includes('No confirmado')||t.includes('⚠️')?'badge warn':`badge ${type}`}
-function render(){filters.innerHTML='';const all=document.createElement('button');all.className='filter'+(selected.size===0?' active':'');all.textContent='Todos';all.onclick=()=>{selected.clear();render()};filters.appendChild(all);cats.forEach(c=>{const b=document.createElement('button');b.className='filter'+(selected.has(c)?' active':'');b.innerHTML=`${iconHtml(c,'filter-icon')}${c}`;b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);render()};filters.appendChild(b)});list.innerHTML='';places.filter(visible).forEach(p=>{const el=document.createElement('article');el.className='place';el.innerHTML=`<h2>${iconHtml(p.category)}${p.name}</h2><div class="meta">${p.category}</div><p class="desc">${p.desc}</p><div class="badges"><span class="${badgeClass(p.access,'access')}">🎟 ${p.access}</span><span class="${badgeClass(p.dogs,'dog')}">🐾 ${p.dogs}</span></div><div class="facts"><div><b>Qué merece la pena:</b> ${p.highlights}</div><div><b>Tiempo recomendado:</b> ${p.time}</div><div><b>Consejo:</b> ${p.tip}</div></div><div class="links"><a href="${gmaps(p)}" target="_blank" rel="noopener">Abrir en Google Maps</a><a class="secondary" href="${p.source}" target="_blank" rel="noopener">Fuente</a></div>`;el.onclick=e=>{if(e.target.tagName==='A')return;map.setView([p.lat,p.lng],14,{animate:true});markers.get(p.id).openPopup()};list.appendChild(el)});markers.forEach((m,id)=>{const p=places.find(x=>x.id===id);visible(p)?(!map.hasLayer(m)&&m.addTo(map)):map.removeLayer(m)})}render();
-document.getElementById('fit').onclick=()=>{const v=places.filter(visible);if(v.length)map.fitBounds(L.latLngBounds(v.map(p=>[p.lat,p.lng])),{padding:[30,30]})};let userMarker,userAccuracy;function locateMe(){if(!navigator.geolocation){status.textContent='Este navegador no permite geolocalización.';return}status.textContent='Buscando tu ubicación…';navigator.geolocation.getCurrentPosition(pos=>{const {latitude,longitude,accuracy}=pos.coords;if(userMarker)map.removeLayer(userMarker);if(userAccuracy)map.removeLayer(userAccuracy);userAccuracy=L.circle([latitude,longitude],{radius:accuracy,color:'#1685ff',weight:1,fillOpacity:.08}).addTo(map);userMarker=L.marker([latitude,longitude],{icon:L.divIcon({className:'',html:'<div class="gps-dot"></div>',iconSize:[16,16],iconAnchor:[8,8]})}).bindPopup(`Tu ubicación<br><small>Precisión aprox.: ${Math.round(accuracy)} m</small>`).addTo(map);map.setView([latitude,longitude],15);userMarker.openPopup();status.textContent=`Ubicación encontrada · precisión aprox. ${Math.round(accuracy)} m`},err=>{status.textContent=err.code===1?'Permiso de ubicación denegado.':'No se ha podido obtener tu ubicación.'},{enableHighAccuracy:true,timeout:12000,maximumAge:30000})}document.getElementById('locate').onclick=locateMe;
 
-const sheet=document.getElementById('sheet'),handle=document.getElementById('sheetHandle'),up=document.getElementById('sheetUp'),down=document.getElementById('sheetDown');let sheetState='half';
-function mobile(){return matchMedia('(max-width:760px)').matches}function sizes(){const h=window.innerHeight;return{collapsed:54,half:Math.round(h*.54),full:Math.max(260,h-6)}}
-function setSheet(state,customHeight=null){if(!mobile())return;sheetState=state;sheet.classList.remove('collapsed','expanded');if(state==='collapsed')sheet.classList.add('collapsed');if(state==='full')sheet.classList.add('expanded');if(customHeight!==null)sheet.style.height=customHeight+'px';else sheet.style.height='';down.disabled=state==='collapsed';up.disabled=state==='full';setTimeout(()=>map.invalidateSize(),300)}
-up.onclick=e=>{e.stopPropagation();setSheet(sheetState==='collapsed'?'half':'full')};down.onclick=e=>{e.stopPropagation();setSheet(sheetState==='full'?'half':'collapsed')};
-let dragging=false,startY=0,startH=0;handle.addEventListener('pointerdown',e=>{if(!mobile()||e.target.closest('button'))return;dragging=true;startY=e.clientY;startH=sheet.getBoundingClientRect().height;sheet.classList.add('dragging');handle.setPointerCapture(e.pointerId)});handle.addEventListener('pointermove',e=>{if(!dragging)return;const s=sizes();const h=Math.max(s.collapsed,Math.min(s.full,startH+(startY-e.clientY)));sheet.style.height=h+'px';map.invalidateSize()});function endDrag(e){if(!dragging)return;dragging=false;sheet.classList.remove('dragging');try{handle.releasePointerCapture(e.pointerId)}catch{}const h=sheet.getBoundingClientRect().height,s=sizes(),points=[['collapsed',s.collapsed],['half',s.half],['full',s.full]];points.sort((a,b)=>Math.abs(a[1]-h)-Math.abs(b[1]-h));setSheet(points[0][0])}handle.addEventListener('pointerup',endDrag);handle.addEventListener('pointercancel',endDrag);window.addEventListener('resize',()=>{if(mobile())setSheet(sheetState);else{sheet.style.height='';sheet.classList.remove('collapsed','expanded')}});if(mobile())setSheet('half');
+const map=L.map('map',{zoomControl:true});
+const outdoors=L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png',{maxZoom:20,attribution:'&copy; Stadia Maps &copy; OpenMapTiles &copy; OpenStreetMap contributors'}).addTo(map);
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});
+const terrain=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'&copy; OpenStreetMap contributors · SRTM · OpenTopoMap'});
+L.control.layers({'Stadia Outdoors':outdoors,'OpenStreetMap':osm,'Relieve':terrain},null,{collapsed:true}).addTo(map);
 
-let deferredPrompt=null;const installBtn=document.getElementById('installApp');window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.style.display='inline-flex'});installBtn.onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;return}const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);status.textContent=isiOS?'En iPhone: Compartir → Añadir a pantalla de inicio.':'En Chrome: menú ⋮ → Añadir a pantalla de inicio / Instalar app.'};window.addEventListener('appinstalled',()=>{status.textContent='Mapa instalado en el móvil.'});if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
-</script></body></html>
+const markers=new Map(),bounds=L.latLngBounds([]);
+function svgFor(c){return svgs[c]||svgs.Visita}
+function iconHtml(c,cls='cat-icon'){return `<span class="${cls}" style="background:${colors[c]||'#2f81f7'}">${svgFor(c)}</span>`}
+function icon(p){return L.divIcon({className:'',html:`<div style="width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:${colors[p.category]||'#2f81f7'};border:2px solid #fff;box-shadow:0 2px 8px #0008">${svgFor(p.category)}</div>`,iconSize:[32,32],iconAnchor:[16,16],popupAnchor:[0,-16]})}
+function gmaps(p){return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}`}
+function popupBadgeClass(text,type){return text.includes('No confirmado')||text.includes('⚠️')?'popup-badge warn':`popup-badge ${type}`}
+function popup(p){return `<div class="popup"><h3>${iconHtml(p.category)}${p.name}</h3><div class="category">${p.category}</div><p class="desc">${p.desc}</p><div class="popup-badges"><div class="${popupBadgeClass(p.access,'access')}">🎟 <b>Entrada / precio:</b> ${p.access}</div><div class="${popupBadgeClass(p.dogs,'dog')}">🐾 <b>Perros:</b> ${p.dogs}</div></div><div class="popup-facts"><div><b>Qué merece la pena:</b> ${p.highlights}</div><div><b>Tiempo recomendado:</b> ${p.time}</div></div><div class="popup-tip"><b>Consejo:</b> ${p.tip}</div><a href="${gmaps(p)}" target="_blank" rel="noopener">Google Maps</a><a class="secondary" href="${p.source}" target="_blank" rel="noopener">Fuente</a></div>`}
+places.forEach(p=>{const m=L.marker([p.lat,p.lng],{icon:icon(p)}).bindPopup(popup(p),{maxWidth:360}).addTo(map);markers.set(p.id,m);bounds.extend([p.lat,p.lng])});
+map.fitBounds(bounds,{padding:[30,30]});
+
+const filters=document.getElementById('filters'),list=document.getElementById('list'),status=document.getElementById('status');
+document.getElementById('subtitle').textContent=`Guía interactiva · ${places.length} lugares guardados`;
+const cats=[...new Set(places.map(p=>p.category))];
+let selected=new Set();
+function visible(p){return selected.size===0||selected.has(p.category)}
+function badgeClass(t,type){return t.includes('No confirmado')||t.includes('⚠️')?'badge warn':`badge ${type}`}
+function compactAccess(t){
+ const price=t.match(/\d+(?:[,.]\d+)?\s*€/);
+ if(/gratis|gratuit|acceso libre/i.test(t))return price?`Gratis / ${price[0]}`:'Gratis';
+ if(price)return price[0];
+ if(/de pago|pago/i.test(t))return'De pago';
+ return'Consultar';
+}
+function compactDogs(t){
+ if(/prohib/i.test(t))return'No';
+ if(/⚠️|no confirmado|consultar|no he encontrado|no especifica|preguntar/i.test(t))return'Consultar';
+ if(/sí|admitid|bienvenid|aceptad/i.test(t))return'Sí';
+ return'Consultar';
+}
+function closeOtherCards(current){
+ document.querySelectorAll('.place.open').forEach(card=>{
+   if(card!==current){card.classList.remove('open');const b=card.querySelector('.place-summary');if(b)b.setAttribute('aria-expanded','false')}
+ });
+}
+function render(){
+ filters.innerHTML='';
+ const all=document.createElement('button');all.className='filter'+(selected.size===0?' active':'');all.textContent='Todos';all.onclick=()=>{selected.clear();render()};filters.appendChild(all);
+ cats.forEach(c=>{const b=document.createElement('button');b.className='filter'+(selected.has(c)?' active':'');b.innerHTML=`${iconHtml(c,'filter-icon')}${c}`;b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);render()};filters.appendChild(b)});
+ list.innerHTML='';
+ places.filter(visible).forEach(p=>{
+   const el=document.createElement('article');el.className='place';
+   const dogShort=compactDogs(p.dogs),accessShort=compactAccess(p.access);
+   el.innerHTML=`<button class="place-summary" type="button" aria-expanded="false">
+     ${iconHtml(p.category)}
+     <span class="summary-copy"><span class="summary-title">${p.name}</span><span class="summary-meta">${p.category} · ${p.time}</span></span>
+     <span class="summary-side"><span class="quick-badges"><span class="quick">🎟 ${accessShort}</span><span class="quick ${dogShort==='Consultar'?'warn':'dog'}">🐾 ${dogShort}</span></span><span class="card-chevron"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></span>
+   </button>
+   <div class="place-body">
+     <p class="desc">${p.desc}</p>
+     <div class="badges"><span class="${badgeClass(p.access,'access')}">🎟 ${p.access}</span><span class="${badgeClass(p.dogs,'dog')}">🐾 ${p.dogs}</span></div>
+     <div class="facts"><div><b>Qué merece la pena:</b> ${p.highlights}</div><div><b>Tiempo recomendado:</b> ${p.time}</div><div><b>Consejo:</b> ${p.tip}</div></div>
+     <div class="links"><button class="map-jump" type="button">Ver en el mapa</button><a href="${gmaps(p)}" target="_blank" rel="noopener">Abrir en Google Maps</a><a class="secondary" href="${p.source}" target="_blank" rel="noopener">Fuente</a></div>
+   </div>`;
+   const summary=el.querySelector('.place-summary');
+   summary.addEventListener('click',()=>{
+     const opening=!el.classList.contains('open');
+     if(opening)closeOtherCards(el);
+     el.classList.toggle('open',opening);
+     summary.setAttribute('aria-expanded',String(opening));
+     if(opening)setTimeout(()=>el.scrollIntoView({block:'nearest',behavior:'smooth'}),80);
+   });
+   el.querySelector('.map-jump').addEventListener('click',()=>{map.setView([p.lat,p.lng],14,{animate:true});markers.get(p.id).openPopup()});
+   list.appendChild(el);
+ });
+ markers.forEach((m,id)=>{const p=places.find(x=>x.id===id);visible(p)?(!map.hasLayer(m)&&m.addTo(map)):map.removeLayer(m)});
+}
+render();
+
+document.getElementById('fit').onclick=()=>{const v=places.filter(visible);if(v.length)map.fitBounds(L.latLngBounds(v.map(p=>[p.lat,p.lng])),{padding:[30,30]})};
+let userMarker,userAccuracy;
+function locateMe(){
+ if(!navigator.geolocation){status.textContent='Este navegador no permite geolocalización.';return}
+ status.textContent='Buscando tu ubicación…';
+ navigator.geolocation.getCurrentPosition(pos=>{
+   const {latitude,longitude,accuracy}=pos.coords;
+   if(userMarker)map.removeLayer(userMarker);if(userAccuracy)map.removeLayer(userAccuracy);
+   userAccuracy=L.circle([latitude,longitude],{radius:accuracy,color:'#1685ff',weight:1,fillOpacity:.08}).addTo(map);
+   userMarker=L.marker([latitude,longitude],{icon:L.divIcon({className:'',html:'<div class="gps-dot"></div>',iconSize:[16,16],iconAnchor:[8,8]})}).bindPopup(`Tu ubicación<br><small>Precisión aprox.: ${Math.round(accuracy)} m</small>`).addTo(map);
+   map.setView([latitude,longitude],15);userMarker.openPopup();status.textContent=`Ubicación encontrada · precisión aprox. ${Math.round(accuracy)} m`;
+ },err=>{status.textContent=err.code===1?'Permiso de ubicación denegado.':'No se ha podido obtener tu ubicación.'},{enableHighAccuracy:true,timeout:12000,maximumAge:30000});
+}
+document.getElementById('locate').onclick=locateMe;
+
+const sheet=document.getElementById('sheet'),handle=document.getElementById('sheetHandle'),up=document.getElementById('sheetUp'),down=document.getElementById('sheetDown');
+let sheetState='half';
+function mobile(){return matchMedia('(max-width:760px)').matches}
+function sizes(){const h=window.innerHeight;return{collapsed:58,half:Math.round(h*.54),full:Math.max(260,h-6)}}
+function setSheet(state,customHeight=null){
+ if(!mobile())return;sheetState=state;sheet.classList.remove('collapsed','expanded');
+ if(state==='collapsed')sheet.classList.add('collapsed');if(state==='full')sheet.classList.add('expanded');
+ if(customHeight!==null)sheet.style.height=customHeight+'px';else sheet.style.height='';
+ down.disabled=state==='collapsed';up.disabled=state==='full';setTimeout(()=>map.invalidateSize(),300);
+}
+up.onclick=e=>{e.stopPropagation();setSheet(sheetState==='collapsed'?'half':'full')};
+down.onclick=e=>{e.stopPropagation();setSheet(sheetState==='full'?'half':'collapsed')};
+let dragging=false,startY=0,startH=0;
+handle.addEventListener('pointerdown',e=>{if(!mobile()||e.target.closest('button'))return;dragging=true;startY=e.clientY;startH=sheet.getBoundingClientRect().height;sheet.classList.add('dragging');handle.setPointerCapture(e.pointerId)});
+handle.addEventListener('pointermove',e=>{if(!dragging)return;const s=sizes();const h=Math.max(s.collapsed,Math.min(s.full,startH+(startY-e.clientY)));sheet.style.height=h+'px';map.invalidateSize()});
+function endDrag(e){if(!dragging)return;dragging=false;sheet.classList.remove('dragging');try{handle.releasePointerCapture(e.pointerId)}catch{}const h=sheet.getBoundingClientRect().height,s=sizes(),points=[['collapsed',s.collapsed],['half',s.half],['full',s.full]];points.sort((a,b)=>Math.abs(a[1]-h)-Math.abs(b[1]-h));setSheet(points[0][0])}
+handle.addEventListener('pointerup',endDrag);handle.addEventListener('pointercancel',endDrag);
+window.addEventListener('resize',()=>{if(mobile())setSheet(sheetState);else{sheet.style.height='';sheet.classList.remove('collapsed','expanded')}});
+if(mobile())setSheet('half');
+
+let deferredPrompt=null;
+const installBtn=document.getElementById('installApp');
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.style.display='inline-flex'});
+installBtn.onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;return}const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);status.textContent=isiOS?'En iPhone: Compartir → Añadir a pantalla de inicio.':'En Chrome: menú ⋮ → Añadir a pantalla de inicio / Instalar app.'};
+window.addEventListener('appinstalled',()=>{status.textContent='Mapa instalado en el móvil.'});
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+</script>
+</body></html>
