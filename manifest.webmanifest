@@ -1,0 +1,19 @@
+{
+  "name": "Viaje Francia 2026",
+  "short_name": "Viaje Francia",
+  "description": "Mapa interactivo del viaje por el País Vasco francés y Las Landas",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#161b22",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
