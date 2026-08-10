@@ -7,14 +7,16 @@
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    :root{--bg:#0d1117;--panel:#161b22;--card:#21262d;--text:#f0f6fc;--muted:#8b949e;--line:#30363d;--accent:#2f81f7;--ok:#238636;--warn:#9e6a03;--bad:#da3633}
+    :root{--bg:#0d1117;--panel:#161b22;--card:#21262d;--text:#f0f6fc;--muted:#8b949e;--line:#30363d;--accent:#2f81f7}
     *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
     .app{display:grid;grid-template-columns:440px 1fr;height:100vh}.sidebar{background:var(--panel);border-right:1px solid var(--line);overflow:auto;padding:22px}.map{height:100vh}
-    h1{font-size:24px;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;margin-bottom:16px}.filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}.filter{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:7px 10px;cursor:pointer;font-size:12px}.filter.active{background:var(--accent);border-color:var(--accent)}
+    h1{font-size:24px;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;margin-bottom:16px}.filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+    .filter{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:7px 10px;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;gap:6px}.filter.active{background:var(--accent);border-color:var(--accent)}
     .toolbar{display:flex;gap:8px;margin-bottom:16px}.tool{border:1px solid var(--line);background:#21262d;color:#fff;border-radius:10px;padding:9px 11px;cursor:pointer;font-weight:600}.tool:hover{border-color:#6e7681}.status{font-size:12px;color:var(--muted);margin:-7px 0 14px;min-height:16px}
     .list{display:flex;flex-direction:column;gap:12px}.place{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;transition:.15s}.place:hover{border-color:#6e7681;transform:translateY(-1px)}.place h2{font-size:16px;margin:0 0 7px;display:flex;align-items:center;gap:8px}.meta{font-size:12px;color:var(--muted);margin-bottom:8px}.desc{font-size:13px;line-height:1.5;color:#c9d1d9;margin:0}.facts{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:grid;gap:7px;font-size:12px;line-height:1.45;color:#c9d1d9}.facts b{color:var(--text)}
     .badges{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 0}.badge{padding:5px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#30363d}.badge.access{background:#243447}.badge.dog{background:#1f3d2b}.badge.warn{background:#4d3610}.links{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.links a{font-size:12px;text-decoration:none;color:white;background:#2f81f7;padding:7px 9px;border-radius:8px}.links a.secondary{background:#30363d}
-    .cat-icon{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;color:white;font-size:15px;flex:0 0 28px}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#161b22;color:#f0f6fc}.popup{max-width:310px}.popup h3{margin:0 0 6px;font-size:16px}.popup p{margin:0 0 7px;line-height:1.4}.popup .mini{font-size:12px;color:#c9d1d9}.popup a{display:inline-block;color:white;background:#2f81f7;text-decoration:none;border-radius:8px;padding:7px 9px;font-weight:600;margin:3px 4px 0 0}.legend{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.45}.leaflet-control-layers{font:13px system-ui}.gps-dot{width:16px;height:16px;border-radius:50%;background:#1685ff;border:3px solid white;box-shadow:0 0 0 5px rgba(22,133,255,.25)}
+    .cat-icon,.filter-icon{display:inline-grid;place-items:center;border-radius:50%;flex:0 0 auto}.cat-icon{width:28px;height:28px}.filter-icon{width:16px;height:16px}.cat-icon svg{width:15px;height:15px}.filter-icon svg{width:10px;height:10px}
+    .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#161b22;color:#f0f6fc}.popup{max-width:310px}.popup h3{margin:0 0 6px;font-size:16px;display:flex;align-items:center;gap:8px}.popup p{margin:0 0 7px;line-height:1.4}.popup .mini{font-size:12px;color:#c9d1d9}.popup a{display:inline-block;color:white;background:#2f81f7;text-decoration:none;border-radius:8px;padding:7px 9px;font-weight:600;margin:3px 4px 0 0}.legend{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.45}.leaflet-control-layers{font:13px system-ui}.gps-dot{width:16px;height:16px;border-radius:50%;background:#1685ff;border:3px solid white;box-shadow:0 0 0 5px rgba(22,133,255,.25)}
     @media(max-width:760px){.app{grid-template-columns:1fr;grid-template-rows:46vh 54vh}.sidebar{grid-row:2;padding:15px;border-right:0;border-top:1px solid var(--line)}.map{height:46vh;grid-row:1}h1{font-size:20px}.toolbar{position:sticky;top:-15px;background:var(--panel);padding:8px 0;z-index:5}}
   </style>
 </head>
@@ -27,7 +29,7 @@
     <div class="status" id="status"></div>
     <div class="filters" id="filters"></div>
     <div class="list" id="list"></div>
-    <div class="legend">Cada ficha indica entrada/precio y situación con perros. Cuando no he encontrado una política fiable, aparece como “no confirmado” en vez de asumirla. Los datos de precios y normas pueden cambiar, así que mantendremos las fuentes enlazadas.</div>
+    <div class="legend">Puedes combinar varios tipos de destino a la vez. “Todos” restablece el mapa completo. Cada ficha indica entrada/precio y situación con perros.</div>
   </aside>
   <div id="map" class="map"></div>
 </div>
@@ -36,7 +38,17 @@
 <script>
 const places=window.PLACES||[];
 const colors={Visita:'#2f81f7','Pueblo / costa':'#58a6ff',Pueblo:'#d29922',Actividad:'#db61a2',Naturaleza:'#3fb950',Artesanía:'#a371f7',Gastronomía:'#f0883e',Pernocta:'#1f6feb',Parking:'#8b949e'};
-const symbols={Visita:'🏛️','Pueblo / costa':'🌊',Pueblo:'🏘️',Actividad:'🚞',Naturaleza:'🥾',Artesanía:'🏺',Gastronomía:'🍷',Pernocta:'🚐',Parking:'🅿️'};
+const svgs={
+  'Visita':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 20V8l6-4 6 4v12"/><path d="M9 20v-6h6v6"/></svg>',
+  'Pueblo / costa':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2"/><path d="M3 15c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2"/></svg>',
+  'Pueblo':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 5l8 6.5V20H4z"/><path d="M10 20v-5h4v5"/></svg>',
+  'Actividad':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V4"/><path d="M6 5h10l-2 3 2 3H6"/></svg>',
+  'Naturaleza':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19 10 8l4 6 2-3 5 8H3z"/></svg>',
+  'Artesanía':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8"/><path d="M10 4v4l-3 4a5 5 0 0 0 5 8 5 5 0 0 0 5-8l-3-4V4"/></svg>',
+  'Gastronomía':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v4a4 4 0 0 1-8 0V4z"/><path d="M12 12v6"/><path d="M9 20h6"/></svg>',
+  'Pernocta':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 13a7 7 0 1 1-8-8 5.5 5.5 0 0 0 8 8z"/></svg>',
+  'Parking':'<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20V4h6a4 4 0 0 1 0 8H8"/></svg>'
+};
 const map=L.map('map',{zoomControl:true});
 const outdoors=L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png',{maxZoom:20,attribution:'&copy; Stadia Maps &copy; OpenMapTiles &copy; OpenStreetMap contributors'}).addTo(map);
 const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});
@@ -44,17 +56,29 @@ const terrain=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{ma
 L.control.layers({'Stadia Outdoors':outdoors,'OpenStreetMap':osm,'Relieve':terrain},null,{position:'topright',collapsed:true}).addTo(map);
 const markers=new Map();
 const bounds=L.latLngBounds([]);
-function icon(p){const symbol=symbols[p.category]||'📍';return L.divIcon({className:'',html:`<div title="${p.category}" style="width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:${colors[p.category]||'#2f81f7'};color:#fff;border:2px solid #fff;box-shadow:0 2px 8px #0008;font-size:17px;line-height:1">${symbol}</div>`,iconSize:[34,34],iconAnchor:[17,17],popupAnchor:[0,-17]});}
+function svgFor(category){return svgs[category]||svgs['Visita']}
+function iconHtml(category,cssClass='cat-icon'){return `<span class="${cssClass}" style="background:${colors[category]||'#2f81f7'}">${svgFor(category)}</span>`}
+function icon(p){return L.divIcon({className:'',html:`<div style="width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:${colors[p.category]||'#2f81f7'};border:2px solid #fff;box-shadow:0 2px 8px #0008">${svgFor(p.category)}</div>`,iconSize:[32,32],iconAnchor:[16,16],popupAnchor:[0,-16]});}
 function gmaps(p){return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}`}
-function popup(p){return `<div class="popup"><h3>${symbols[p.category]||'📍'} ${p.name}</h3><p><b>${p.category}</b></p><p>${p.desc}</p><p class="mini"><b>Entrada/precio:</b> ${p.access}</p><p class="mini"><b>🐾 Perro:</b> ${p.dogs}</p><p class="mini"><b>Tiempo:</b> ${p.time}</p><a href="${gmaps(p)}" target="_blank" rel="noopener">Google Maps</a><a href="${p.source}" target="_blank" rel="noopener">Fuente</a></div>`}
+function popup(p){return `<div class="popup"><h3>${iconHtml(p.category)}${p.name}</h3><p><b>${p.category}</b></p><p>${p.desc}</p><p class="mini"><b>Entrada/precio:</b> ${p.access}</p><p class="mini"><b>🐾 Perro:</b> ${p.dogs}</p><p class="mini"><b>Tiempo:</b> ${p.time}</p><a href="${gmaps(p)}" target="_blank" rel="noopener">Google Maps</a><a href="${p.source}" target="_blank" rel="noopener">Fuente</a></div>`}
 places.forEach(p=>{const m=L.marker([p.lat,p.lng],{icon:icon(p)}).bindPopup(popup(p)).addTo(map);markers.set(p.id,m);bounds.extend([p.lat,p.lng])});
 map.fitBounds(bounds,{padding:[30,30]});
-const filters=document.getElementById('filters'),list=document.getElementById('list'),status=document.getElementById('status');document.getElementById('subtitle').textContent=`Guía interactiva · ${places.length} lugares guardados`;
-const cats=['Todos',...new Set(places.map(p=>p.category))];let active='Todos';
+const filters=document.getElementById('filters'),list=document.getElementById('list'),status=document.getElementById('status');
+document.getElementById('subtitle').textContent=`Guía interactiva · ${places.length} lugares guardados`;
+const cats=[...new Set(places.map(p=>p.category))];
+let selected=new Set();
+function isVisible(p){return selected.size===0 || selected.has(p.category)}
 function badgeClass(text,type){return text.includes('No confirmado')||text.includes('⚠️')?'badge warn':`badge ${type}`}
-function render(){filters.innerHTML='';cats.forEach(c=>{const b=document.createElement('button');b.className='filter'+(c===active?' active':'');b.textContent=c==='Todos'?'Todos':`${symbols[c]||'📍'} ${c}`;b.addEventListener('click',()=>{active=c;render()});filters.appendChild(b)});list.innerHTML='';places.filter(p=>active==='Todos'||p.category===active).forEach(p=>{const el=document.createElement('article');el.className='place';el.innerHTML=`<h2><span class="cat-icon" style="background:${colors[p.category]||'#2f81f7'}">${symbols[p.category]||'📍'}</span>${p.name}</h2><div class="meta">${p.category}</div><p class="desc">${p.desc}</p><div class="badges"><span class="${badgeClass(p.access,'access')}">🎟 ${p.access}</span><span class="${badgeClass(p.dogs,'dog')}">🐾 ${p.dogs}</span></div><div class="facts"><div><b>Qué merece la pena:</b> ${p.highlights}</div><div><b>Tiempo recomendado:</b> ${p.time}</div><div><b>Consejo:</b> ${p.tip}</div></div><div class="links"><a href="${gmaps(p)}" target="_blank" rel="noopener">Abrir en Google Maps</a><a class="secondary" href="${p.source}" target="_blank" rel="noopener">Fuente</a></div>`;el.addEventListener('click',e=>{if(e.target.tagName==='A')return;map.setView([p.lat,p.lng],14,{animate:true});markers.get(p.id).openPopup()});list.appendChild(el)});markers.forEach((m,id)=>{const p=places.find(x=>x.id===id);if(active==='Todos'||p.category===active){if(!map.hasLayer(m))m.addTo(map)}else map.removeLayer(m)})}
+function render(){
+  filters.innerHTML='';
+  const all=document.createElement('button');all.className='filter'+(selected.size===0?' active':'');all.textContent='Todos';all.addEventListener('click',()=>{selected.clear();render()});filters.appendChild(all);
+  cats.forEach(c=>{const b=document.createElement('button');b.className='filter'+(selected.has(c)?' active':'');b.innerHTML=`${iconHtml(c,'filter-icon')}${c}`;b.addEventListener('click',()=>{if(selected.has(c))selected.delete(c);else selected.add(c);render()});filters.appendChild(b)});
+  list.innerHTML='';
+  places.filter(isVisible).forEach(p=>{const el=document.createElement('article');el.className='place';el.innerHTML=`<h2>${iconHtml(p.category)}${p.name}</h2><div class="meta">${p.category}</div><p class="desc">${p.desc}</p><div class="badges"><span class="${badgeClass(p.access,'access')}">🎟 ${p.access}</span><span class="${badgeClass(p.dogs,'dog')}">🐾 ${p.dogs}</span></div><div class="facts"><div><b>Qué merece la pena:</b> ${p.highlights}</div><div><b>Tiempo recomendado:</b> ${p.time}</div><div><b>Consejo:</b> ${p.tip}</div></div><div class="links"><a href="${gmaps(p)}" target="_blank" rel="noopener">Abrir en Google Maps</a><a class="secondary" href="${p.source}" target="_blank" rel="noopener">Fuente</a></div>`;el.addEventListener('click',e=>{if(e.target.tagName==='A')return;map.setView([p.lat,p.lng],14,{animate:true});markers.get(p.id).openPopup()});list.appendChild(el)});
+  markers.forEach((m,id)=>{const p=places.find(x=>x.id===id);if(isVisible(p)){if(!map.hasLayer(m))m.addTo(map)}else map.removeLayer(m)})
+}
 render();
-document.getElementById('fit').addEventListener('click',()=>map.fitBounds(bounds,{padding:[30,30]}));
+document.getElementById('fit').addEventListener('click',()=>{const visible=places.filter(isVisible);if(!visible.length)return;map.fitBounds(L.latLngBounds(visible.map(p=>[p.lat,p.lng])),{padding:[30,30]})});
 let userMarker,userAccuracy;
 document.getElementById('locate').addEventListener('click',()=>{if(!navigator.geolocation){status.textContent='Este navegador no permite geolocalización.';return}status.textContent='Buscando tu ubicación…';navigator.geolocation.getCurrentPosition(pos=>{const {latitude,longitude,accuracy}=pos.coords;if(userMarker)map.removeLayer(userMarker);if(userAccuracy)map.removeLayer(userAccuracy);userAccuracy=L.circle([latitude,longitude],{radius:accuracy,color:'#1685ff',weight:1,fillOpacity:.08}).addTo(map);userMarker=L.marker([latitude,longitude],{icon:L.divIcon({className:'',html:'<div class="gps-dot"></div>',iconSize:[16,16],iconAnchor:[8,8]})}).bindPopup(`Tu ubicación<br><small>Precisión aproximada: ${Math.round(accuracy)} m</small>`).addTo(map);map.setView([latitude,longitude],15);userMarker.openPopup();status.textContent=`Ubicación encontrada · precisión aprox. ${Math.round(accuracy)} m`;},err=>{status.textContent=err.code===1?'Permiso de ubicación denegado.':'No se ha podido obtener tu ubicación.';},{enableHighAccuracy:true,timeout:12000,maximumAge:30000})});
 </script>
