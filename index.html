@@ -4,13 +4,16 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Viaje Francia 2026 · Mapa</title>
-<meta name="theme-color" content="#101820"/>
+<meta name="theme-color" content="#0767F2"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Viaje Francia"/>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <link rel="icon" href="./icon.svg" type="image/svg+xml"/>
 <link rel="apple-touch-icon" href="./icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link id="travel-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 :root{
@@ -41,6 +44,7 @@
  .filter-overlay{padding:0;align-items:stretch}.filter-panel{width:100%;max-height:none;height:100dvh;border:0;border-radius:0;padding-top:env(safe-area-inset-top,0px)}.filter-head{padding:18px 17px 14px}.filter-title{font-size:19px}.filter-list{padding:11px 14px;gap:7px}.filter-option{padding:10px 11px}.filter-actions{padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px))}.filter-summary{padding:0 14px 10px}
 }
 </style>
+<link rel="stylesheet" href="./theme.css?v=10"/>
 </head>
 <body>
 <div class="app">
@@ -77,10 +81,10 @@
 <script src="places.js"></script><script src="beaches.js"></script><script src="inland.js"></script>
 <script>
 const places=[...(window.PLACES||[]),...(window.BEACHES||[]),...(window.INLAND||[])];
-const colors={Visita:'#4f8fcd','Pueblo / costa':'#4d9eaa',Pueblo:'#ba8d50',Actividad:'#b46f98',Naturaleza:'#5d9b70',Artesanía:'#8a75b5',Gastronomía:'#c17b52',Pernocta:'#536d9b',Parking:'#697783','Playa con perro':'#3f9a98','Baño interior':'#438ead'};
+const colors={Visita:'#7C3AED','Pueblo / costa':'#F97316',Pueblo:'#D97706',Actividad:'#E11D8A',Naturaleza:'#22A65A',Artesanía:'#DB5E80',Gastronomía:'#F59E0B',Pernocta:'#8B5CF6',Parking:'#64748B','Playa con perro':'#087CF3','Baño interior':'#00A7E8'};
 const svgs={
  Visita:'<svg viewBox="0 0 24 24"><path d="M4 20h16M6 20V9h12v11M5 9l7-5 7 5M9 12v4M15 12v4"/></svg>',
- 'Pueblo / costa':'<svg viewBox="0 0 24 24"><path d="M4 11.5 9 7l5 4.5V17M4 19c1.5 0 1.5-1.4 3-1.4S8.5 19 10 19s1.5-1.4 3-1.4 1.5 1.4 3 1.4 1.5-1.4 3-1.4"/><path d="M7 10v4h4"/></svg>',
+ 'Pueblo / costa':'<svg viewBox="0 0 24 24"><path d="M4 11.5 9 7l5 4.5V17M4 19c1.5 0 1.5-1.4 3.4-1.4S8.5 19 10 19s1.5-1.4 3-1.4 1.5 1.4 3 1.4 1.5-1.4 3-1.4"/><path d="M7 10v4h4"/></svg>',
  Pueblo:'<svg viewBox="0 0 24 24"><path d="M3.5 20h17M5 20v-8l5-4 5 4v8M15 20v-5l2.5-2 2.5 2v5M8 14h4M10 14v6"/></svg>',
  Actividad:'<svg viewBox="0 0 24 24"><path d="M5 19c2.5-5 4-7.5 7-7.5 2.2 0 2.5 2 4.5 2 1.2 0 2-.7 2.5-1.5"/><circle cx="6" cy="6" r="2"/><path d="M8 7.5 11 10M17 5v5M17 5h3l-1 1.8 1 1.7h-3"/></svg>',
  Naturaleza:'<svg viewBox="0 0 24 24"><path d="M19 4C12 4 6 7.5 6 13.5 6 17 8.4 20 12 20c5.5 0 7-6 7-16Z"/><path d="M5 20c2.5-4 5.5-7 10-9"/></svg>',
@@ -98,8 +102,8 @@ const terrain=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{ma
 L.control.layers({'Stadia Outdoors':outdoors,'OpenStreetMap':osm,'Relieve':terrain},null,{collapsed:true}).addTo(map);
 const markers=new Map(),bounds=L.latLngBounds([]);
 function svgFor(c){return svgs[c]||svgs.Visita}
-function iconHtml(c,cls='cat-icon'){return `<span class="${cls}" style="--cat:${colors[c]||'#4f8fcd'}">${svgFor(c)}</span>`}
-function icon(p){return L.divIcon({className:'',html:`<div style="width:35px;height:35px;border-radius:12px;display:grid;place-items:center;background:${colors[p.category]||'#4f8fcd'};color:#fff;border:1.5px solid rgba(255,255,255,.9);box-shadow:0 5px 14px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.12)">${svgFor(p.category).replace('<svg ','<svg style="width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" ')}</div>`,iconSize:[35,35],iconAnchor:[17.5,17.5],popupAnchor:[0,-18]})}
+function iconHtml(c,cls='cat-icon'){return `<span class="${cls}" style="--cat:${colors[c]||'#7C3AED'}">${svgFor(c)}</span>`}
+function icon(p){return L.divIcon({className:'',html:`<div style="width:35px;height:35px;border-radius:12px;display:grid;place-items:center;background:${colors[p.category]||'#7C3AED'};color:#fff;border:1.5px solid rgba(255,255,255,.9);box-shadow:0 5px 14px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.12)">${svgFor(p.category).replace('<svg ','<svg style="width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" ')}</div>`,iconSize:[35,35],iconAnchor:[17.5,17.5],popupAnchor:[0,-18]})}
 function gmaps(p){return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}`}
 function popupBadgeClass(text,type){return text.includes('No confirmado')||text.includes('⚠️')?'popup-badge warn':`popup-badge ${type}`}
 function popup(p){return `<div class="popup"><h3>${iconHtml(p.category)}${p.name}</h3><div class="category">${p.category}</div><p class="desc">${p.desc}</p><div class="popup-badges"><div class="${popupBadgeClass(p.access,'access')}"><b>Entrada / precio:</b> ${p.access}</div><div class="${popupBadgeClass(p.dogs,'dog')}"><b>Perros:</b> ${p.dogs}</div></div><div class="popup-facts"><div><b>Qué merece la pena:</b> ${p.highlights}</div><div><b>Tiempo recomendado:</b> ${p.time}</div></div><div class="popup-tip"><b>Consejo:</b> ${p.tip}</div><a href="${gmaps(p)}" target="_blank" rel="noopener">Google Maps</a><a class="secondary" href="${p.source}" target="_blank" rel="noopener">Fuente</a></div>`}
