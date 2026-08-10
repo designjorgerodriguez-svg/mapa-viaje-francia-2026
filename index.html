@@ -124,7 +124,11 @@ function render(){
      summary.setAttribute('aria-expanded',String(opening));
      if(opening)setTimeout(()=>el.scrollIntoView({block:'nearest',behavior:'smooth'}),80);
    });
-   el.querySelector('.map-jump').addEventListener('click',()=>{map.setView([p.lat,p.lng],14,{animate:true});markers.get(p.id).openPopup()});
+   el.querySelector('.map-jump').addEventListener('click',()=>{
+     map.closePopup();
+     const goToPoint=()=>{map.invalidateSize();map.setView([p.lat,p.lng],14,{animate:true})};
+     if(mobile()){setSheet('collapsed');setTimeout(goToPoint,320)}else goToPoint();
+   });
    list.appendChild(el);
  });
  markers.forEach((m,id)=>{const p=places.find(x=>x.id===id);visible(p)?(!map.hasLayer(m)&&m.addTo(map)):map.removeLayer(m)});
