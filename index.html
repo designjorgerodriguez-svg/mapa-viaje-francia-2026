@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viaje Francia 2026 · Mapa</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root{--bg:#0d1117;--panel:#161b22;--card:#21262d;--text:#f0f6fc;--muted:#8b949e;--line:#30363d;--accent:#2f81f7;--green:#3fb950;--orange:#d29922;--pink:#db61a2}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+    .app{display:grid;grid-template-columns:370px 1fr;height:100vh}.sidebar{background:var(--panel);border-right:1px solid var(--line);overflow:auto;padding:22px}.map{height:100vh}
+    h1{font-size:24px;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;margin-bottom:18px}.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}.filter{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:8px 11px;cursor:pointer}.filter.active{background:var(--accent);border-color:var(--accent)}
+    .list{display:flex;flex-direction:column;gap:10px}.place{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;transition:.15s}.place:hover{border-color:#6e7681;transform:translateY(-1px)}.place h2{font-size:16px;margin:0 0 7px}.meta{font-size:12px;color:var(--muted);margin-bottom:7px}.desc{font-size:13px;line-height:1.45;color:#c9d1d9;margin:0}.num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:white;font-weight:700;font-size:12px;margin-right:7px}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#161b22;color:#f0f6fc}.popup h3{margin:0 0 6px;font-size:16px}.popup p{margin:0 0 9px;line-height:1.4}.popup a{display:inline-block;color:white;background:#2f81f7;text-decoration:none;border-radius:8px;padding:7px 9px;font-weight:600}
+    .legend{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+    @media(max-width:760px){.app{grid-template-columns:1fr;grid-template-rows:48vh 52vh}.sidebar{grid-row:2;padding:16px;border-right:0;border-top:1px solid var(--line)}.map{height:48vh;grid-row:1}h1{font-size:20px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <h1>Viaje Francia 2026</h1>
+    <div class="sub">Mapa vivo del viaje · 7 lugares guardados</div>
+    <div class="filters" id="filters"></div>
+    <div class="list" id="list"></div>
+    <div class="legend">Los puntos están en el orden de la ruta original. Iremos añadiendo áreas camper, parkings, rutas, pueblos y sitios de interés.</div>
+  </aside>
+  <div id="map" class="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const places = [
+  {id:1,name:'Castillo de Abbadie',category:'Visita',lat:43.3774636,lng:-1.7493127,desc:'Castillo neogótico sobre la costa de Hendaya, rodeado de jardines y con vistas al Atlántico.'},
+  {id:2,name:'Puerto de Saint-Jean-de-Luz',category:'Pueblo / costa',lat:43.386836,lng:-1.664119,desc:'Puerto pesquero y casco histórico junto a la bahía. Buen punto para pasear por el centro y el frente marítimo.'},
+  {id:3,name:'Catedral de Bayona',category:'Visita',lat:43.4906629,lng:-1.4776981,desc:'Catedral gótica en pleno casco histórico de Bayona. Ideal para combinar con un paseo por las calles del centro.'},
+  {id:4,name:'Espelette',category:'Pueblo',lat:43.3411775,lng:-1.4493722,desc:'Pueblo vasco-francés conocido por sus fachadas blancas, entramados rojos y el famoso pimiento de Espelette.'},
+  {id:5,name:'Le Train de La Rhune',category:'Actividad',lat:43.3251141,lng:-1.6008848,desc:'Tren de cremallera que asciende a La Rhune. Una de las excursiones clásicas de la zona por las vistas panorámicas.'},
+  {id:6,name:'Ciudadela de San Juan Pie de Puerto',category:'Visita',lat:43.1621726,lng:-1.23351,desc:'Ciudadela y casco medieval de Saint-Jean-Pied-de-Port, una de las localidades más características del País Vasco francés.'},
+  {id:7,name:'Pasarela de Holzarte',category:'Naturaleza',lat:43.0048234,lng:-0.9228901,desc:'Pasarela colgante sobre las gargantas de Holzarte. Parada de naturaleza y senderismo en un entorno de montaña espectacular.'}
+];
+const colors={Visita:'#2f81f7','Pueblo / costa':'#58a6ff',Pueblo:'#d29922',Actividad:'#db61a2',Naturaleza:'#3fb950'};
+const map=L.map('map',{zoomControl:true});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+const markers=new Map();
+const route=L.polyline(places.map(p=>[p.lat,p.lng]),{color:'#2f81f7',weight:3,opacity:.6,dashArray:'6 7'}).addTo(map);
+map.fitBounds(route.getBounds(),{padding:[30,30]});
+function icon(p){return L.divIcon({className:'',html:`<div style="width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:${colors[p.category]||'#2f81f7'};color:#fff;border:2px solid #fff;box-shadow:0 2px 8px #0008;font:700 12px system-ui">${p.id}</div>`,iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-15]});}
+function popup(p){const g=`https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;return `<div class="popup"><h3>${p.name}</h3><p><b>${p.category}</b></p><p>${p.desc}</p><a href="${g}" target="_blank" rel="noopener">Abrir en Google Maps</a></div>`}
+places.forEach(p=>{const m=L.marker([p.lat,p.lng],{icon:icon(p)}).bindPopup(popup(p)).addTo(map);markers.set(p.id,m)});
+const cats=['Todos',...new Set(places.map(p=>p.category))];
+const filters=document.getElementById('filters'), list=document.getElementById('list');
+let active='Todos';
+function render(){filters.innerHTML='';cats.forEach(c=>{const b=document.createElement('button');b.className='filter'+(c===active?' active':'');b.textContent=c;b.onclick=()=>{active=c;render()};filters.appendChild(b)});
+ list.innerHTML=''; places.filter(p=>active==='Todos'||p.category===active).forEach(p=>{const el=document.createElement('article');el.className='place';el.innerHTML=`<h2><span class="num">${p.id}</span>${p.name}</h2><div class="meta">${p.category}</div><p class="desc">${p.desc}</p>`;el.onclick=()=>{map.setView([p.lat,p.lng],14,{animate:true});markers.get(p.id).openPopup()};list.appendChild(el)});
+ markers.forEach((m,id)=>{const p=places.find(x=>x.id===id);if(active==='Todos'||p.category===active){if(!map.hasLayer(m))m.addTo(map)}else map.removeLayer(m)});
+}
+render();
+</script>
+</body>
+</html>
