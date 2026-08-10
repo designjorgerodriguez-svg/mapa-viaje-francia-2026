@@ -12,5 +12,10 @@ window.addEventListener('load',()=>{
   const script=document.createElement('script');
   script.src='./ui-v4.js';
   script.dataset.travelUiV4='true';
+  script.onload=()=>{
+    const fix=document.createElement('script');
+    fix.src='./ui-v4-fix.js';
+    document.body.appendChild(fix);
+  };
   document.body.appendChild(script);
 });
