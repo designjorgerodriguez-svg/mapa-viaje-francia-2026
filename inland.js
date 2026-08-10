@@ -14,6 +14,6 @@ window.addEventListener('load',()=>{
   if(document.getElementById('travel-ui-loader'))return;
   const script=document.createElement('script');
   script.id='travel-ui-loader';
-  script.src='./ui-v4.js?v=13';
+  script.src='./ui-v4.js?v=14';
   document.body.appendChild(script);
 });
