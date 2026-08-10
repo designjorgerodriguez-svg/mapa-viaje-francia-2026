@@ -20,13 +20,13 @@ window.addEventListener('load',()=>{
 
   if(document.getElementById('travel-ui-v4-loader'))return;
   const modern=document.createElement('script');
-  modern.id='travel-ui-v4-loader';modern.src='./ui-v4.js?v=8';
+  modern.id='travel-ui-v4-loader';modern.src='./ui-v4.js?v=9';
   modern.onload=()=>{
     const polish=document.createElement('script');
-    polish.id='travel-ui-v7-loader';polish.src='./ui-v4-fix.js?v=8';
+    polish.id='travel-ui-v7-loader';polish.src='./ui-v4-fix.js?v=9';
     polish.onload=()=>{
       const compact=document.createElement('script');
-      compact.id='travel-ui-v8-loader';compact.src='./ui-v8-popup.js?v=8';
+      compact.id='travel-ui-v9-loader';compact.src='./ui-v8-popup.js?v=9';
       document.body.appendChild(compact);
     };
     document.body.appendChild(polish);
