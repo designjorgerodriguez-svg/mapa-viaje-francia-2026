@@ -10,26 +10,10 @@ window.INLAND = [
 
 window.addEventListener('load',()=>{
   const themeMeta=document.querySelector('meta[name="theme-color"]');
-  if(themeMeta)themeMeta.setAttribute('content','#0767F2');
-
-  if(!document.getElementById('travel-manrope')){
-    const pre1=document.createElement('link');pre1.rel='preconnect';pre1.href='https://fonts.googleapis.com';document.head.appendChild(pre1);
-    const pre2=document.createElement('link');pre2.rel='preconnect';pre2.href='https://fonts.gstatic.com';pre2.crossOrigin='anonymous';document.head.appendChild(pre2);
-    const font=document.createElement('link');font.id='travel-manrope';font.rel='stylesheet';font.href='https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap';document.head.appendChild(font);
-  }
-
-  if(document.getElementById('travel-ui-v4-loader'))return;
-  const modern=document.createElement('script');
-  modern.id='travel-ui-v4-loader';modern.src='./ui-v4.js?v=10';
-  modern.onload=()=>{
-    const polish=document.createElement('script');
-    polish.id='travel-ui-v7-loader';polish.src='./ui-v4-fix.js?v=10';
-    polish.onload=()=>{
-      const compact=document.createElement('script');
-      compact.id='travel-ui-v10-loader';compact.src='./ui-v8-popup.js?v=10';
-      document.body.appendChild(compact);
-    };
-    document.body.appendChild(polish);
-  };
-  document.body.appendChild(modern);
+  if(themeMeta)themeMeta.setAttribute('content','#075FE4');
+  if(document.getElementById('travel-ui-loader'))return;
+  const script=document.createElement('script');
+  script.id='travel-ui-loader';
+  script.src='./ui-v4.js?v=13';
+  document.body.appendChild(script);
 });
